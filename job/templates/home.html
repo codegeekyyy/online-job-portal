@@ -1,0 +1,1071 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>JobConnect | Find Your Dream Job</title>
+    <meta name="description"
+        content="JobConnect is your go-to job portal. Browse the latest openings, log in as a job seeker, recruiter, or admin." />
+
+    <!-- Bootstrap 5 CDN -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet" />
+
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-dark: #3730a3;
+            --accent: #06b6d4;
+            --dark: #0f172a;
+            --card-bg: #1e293b;
+            --muted: #94a3b8;
+        }
+
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--dark);
+            color: #e2e8f0;
+        }
+
+        /* ── Navbar ── */
+        .navbar {
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+        }
+
+        .navbar-brand span {
+            color: var(--accent);
+        }
+
+        .nav-link {
+            color: #cbd5e1 !important;
+            font-weight: 500;
+            transition: color .2s;
+        }
+
+        .nav-link:hover {
+            color: var(--accent) !important;
+        }
+
+        /* ── Hero ── */
+        #home {
+            background: linear-gradient(135deg, #1e1b4b 0%, #0f172a 60%, #164e63 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding-top: 80px;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            background: rgba(79, 70, 229, 0.2);
+            border: 1px solid rgba(79, 70, 229, 0.4);
+            color: #a78bfa;
+            border-radius: 50px;
+            padding: 6px 18px;
+            font-size: .85rem;
+            font-weight: 600;
+            letter-spacing: .5px;
+            margin-bottom: 1.2rem;
+        }
+
+        .hero-title {
+            font-size: clamp(2.2rem, 5vw, 3.8rem);
+            font-weight: 800;
+            line-height: 1.15;
+        }
+
+        .hero-title .highlight {
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-search .form-control {
+            background: rgba(255, 255, 255, 0.07);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            color: #e2e8f0;
+            border-radius: 12px 0 0 12px;
+            padding: 14px 20px;
+            font-size: 1rem;
+        }
+
+        .hero-search .form-control::placeholder {
+            color: var(--muted);
+        }
+
+        .hero-search .form-control:focus {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: var(--primary);
+            box-shadow: none;
+            color: #e2e8f0;
+        }
+
+        .hero-search .btn-search {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border: none;
+            border-radius: 0 12px 12px 0;
+            padding: 14px 28px;
+            font-weight: 600;
+            color: #fff;
+        }
+
+        .stat-box {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 14px;
+            padding: 18px 24px;
+            text-align: center;
+        }
+
+        .stat-box h3 {
+            font-weight: 800;
+            color: var(--accent);
+            margin: 0;
+            font-size: 1.8rem;
+        }
+
+        .stat-box p {
+            color: var(--muted);
+            margin: 0;
+            font-size: .85rem;
+        }
+
+        /* ── Section shared ── */
+        section {
+            padding: 80px 0;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            font-weight: 800;
+        }
+
+        .section-sub {
+            color: var(--muted);
+            max-width: 520px;
+        }
+
+        /* ── Latest Jobs ── */
+        #latest-jobs {
+            background-color: #0f172a;
+        }
+
+        .job-card {
+            background: var(--card-bg);
+            border: 1px solid rgba(255, 255, 255, 0.07);
+            border-radius: 16px;
+            padding: 24px;
+            transition: transform .25s, box-shadow .25s, border-color .25s;
+            height: 100%;
+        }
+
+        .job-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+            border-color: rgba(79, 70, 229, 0.5);
+        }
+
+        .job-logo {
+            width: 52px;
+            height: 52px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 14px;
+        }
+
+        .badge-type {
+            font-size: .75rem;
+            font-weight: 600;
+            border-radius: 50px;
+            padding: 4px 12px;
+        }
+
+        .badge-fulltime {
+            background: rgba(79, 70, 229, 0.2);
+            color: #a78bfa;
+        }
+
+        .badge-parttime {
+            background: rgba(6, 182, 212, 0.2);
+            color: #67e8f9;
+        }
+
+        .badge-remote {
+            background: rgba(16, 185, 129, 0.2);
+            color: #6ee7b7;
+        }
+
+        .badge-contract {
+            background: rgba(245, 158, 11, 0.2);
+            color: #fcd34d;
+        }
+
+        .job-title {
+            font-weight: 700;
+            font-size: 1.05rem;
+            margin: 10px 0 4px;
+        }
+
+        .job-company {
+            color: var(--muted);
+            font-size: .88rem;
+        }
+
+        .job-meta span {
+            color: var(--muted);
+            font-size: .82rem;
+        }
+
+        .btn-apply {
+            background: linear-gradient(135deg, var(--primary), #7c3aed);
+            border: none;
+            border-radius: 10px;
+            color: #fff;
+            font-weight: 600;
+            padding: 9px 22px;
+            margin-top: 16px;
+            width: 100%;
+            transition: opacity .2s;
+        }
+
+        .btn-apply:hover {
+            opacity: .88;
+            color: #fff;
+        }
+
+        /* ── Login Cards ── */
+        #login-section {
+            background: linear-gradient(180deg, #0f172a, #1e1b4b 60%, #0f172a);
+        }
+
+        .login-card {
+            background: var(--card-bg);
+            border: 1px solid rgba(255, 255, 255, 0.07);
+            border-radius: 20px;
+            padding: 36px 32px;
+            transition: transform .25s, box-shadow .25s;
+            height: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .login-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+        }
+
+        .login-card.user::before {
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+        }
+
+        .login-card.recruiter::before {
+            background: linear-gradient(90deg, #10b981, #06b6d4);
+        }
+
+        .login-card.admin::before {
+            background: linear-gradient(90deg, #f59e0b, #ef4444);
+        }
+
+        .login-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 24px 48px rgba(0, 0, 0, 0.5);
+        }
+
+        .login-icon {
+            width: 64px;
+            height: 64px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            margin: 0 auto 20px;
+        }
+
+        .login-icon.user-icon {
+            background: rgba(79, 70, 229, 0.2);
+            color: #a78bfa;
+        }
+
+        .login-icon.recruiter-icon {
+            background: rgba(16, 185, 129, 0.2);
+            color: #6ee7b7;
+        }
+
+        .login-icon.admin-icon {
+            background: rgba(245, 158, 11, 0.2);
+            color: #fcd34d;
+        }
+
+        .login-card h4 {
+            font-weight: 800;
+            font-size: 1.25rem;
+            margin-bottom: 8px;
+        }
+
+        .login-card p {
+            color: var(--muted);
+            font-size: .9rem;
+            margin-bottom: 24px;
+        }
+
+        .form-control-dark {
+            background: rgba(255, 255, 255, 0.05) !important;
+            border: 1px solid rgba(255, 255, 255, 0.1) !important;
+            color: #e2e8f0 !important;
+            border-radius: 10px;
+        }
+
+        .form-control-dark::placeholder {
+            color: var(--muted);
+        }
+
+        .form-control-dark:focus {
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.25) !important;
+            border-color: var(--primary) !important;
+        }
+
+        .btn-login-user {
+            background: linear-gradient(135deg, var(--primary), #7c3aed);
+            border: none;
+            color: #fff;
+            border-radius: 10px;
+            font-weight: 600;
+            padding: 11px;
+        }
+
+        .btn-login-recruiter {
+            background: linear-gradient(135deg, #10b981, #06b6d4);
+            border: none;
+            color: #fff;
+            border-radius: 10px;
+            font-weight: 600;
+            padding: 11px;
+        }
+
+        .btn-login-admin {
+            background: linear-gradient(135deg, #f59e0b, #ef4444);
+            border: none;
+            color: #fff;
+            border-radius: 10px;
+            font-weight: 600;
+            padding: 11px;
+        }
+
+        /* ── Contact ── */
+        #contact {
+            background-color: #0f172a;
+        }
+
+        .contact-card {
+            background: var(--card-bg);
+            border: 1px solid rgba(255, 255, 255, 0.07);
+            border-radius: 20px;
+            padding: 40px 36px;
+        }
+
+        .contact-info-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            margin-bottom: 24px;
+        }
+
+        .contact-info-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+            background: rgba(79, 70, 229, 0.2);
+            color: #a78bfa;
+        }
+
+        .contact-info-item h6 {
+            font-weight: 700;
+            margin: 0 0 2px;
+        }
+
+        .contact-info-item p {
+            color: var(--muted);
+            margin: 0;
+            font-size: .9rem;
+        }
+
+        .btn-send {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border: none;
+            border-radius: 10px;
+            color: #fff;
+            font-weight: 600;
+            padding: 12px 32px;
+        }
+
+        /* ── Footer ── */
+        footer {
+            background: #060c1a;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+            color: var(--muted);
+            font-size: .88rem;
+        }
+
+        footer a {
+            color: var(--muted);
+            text-decoration: none;
+            transition: color .2s;
+        }
+
+        footer a:hover {
+            color: var(--accent);
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ╔══════════════════════════════╗ -->
+    <!-- ║           NAVBAR             ║ -->
+    <!-- ╚══════════════════════════════╝ -->
+    <nav class="navbar navbar-expand-lg fixed-top" id="mainNavbar">
+        <div class="container">
+            <a class="navbar-brand fw-800 fs-4 text-white" href="#home">
+                Job<span>Connect</span>
+            </a>
+            <button class="navbar-toggler border-0 text-white" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navMenu" aria-controls="navMenu" aria-expanded="false" aria-label="Toggle navigation">
+                <i class="bi bi-list fs-2"></i>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navMenu">
+                <ul class="navbar-nav mx-auto gap-lg-2">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#home"><i class="bi bi-house-door me-1"></i>Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#latest-jobs"><i class="bi bi-briefcase me-1"></i>Latest Jobs</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#login-section"><i class="bi bi-person-circle me-1"></i>Login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#contact"><i class="bi bi-envelope me-1"></i>Contact</a>
+                    </li>
+                </ul>
+                <div class="d-flex gap-2 mt-3 mt-lg-0">
+                    <a href="#login-section" class="btn btn-outline-light btn-sm rounded-pill px-3">Sign In</a>
+                    <a href="#login-section" class="btn btn-sm rounded-pill px-3 text-white"
+                        style="background:linear-gradient(135deg,#4f46e5,#06b6d4);border:none;">Register</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ╔══════════════════════════════╗ -->
+    <!-- ║             HERO             ║ -->
+    <!-- ╚══════════════════════════════╝ -->
+    <section id="home">
+        <div class="container">
+            <div class="row align-items-center g-5">
+                <div class="col-lg-7">
+                    <div class="hero-badge"><i class="bi bi-lightning-charge-fill me-1"></i> #1 Job Portal in 2026</div>
+                    <h1 class="hero-title text-white mb-4">
+                        Find Your <span class="highlight">Dream Job</span><br />
+                        & Unlock Your Future
+                    </h1>
+                    <p class="fs-5 text-secondary mb-5">
+                        Connect with top companies, apply with one click, and take the next
+                        step in your career — all in one place.
+                    </p>
+
+                    <!-- Search bar (HTML-only, links to jobs section) -->
+                    <form class="d-flex hero-search mb-5" action="#latest-jobs" method="get">
+                        <input class="form-control" type="search" name="q" id="heroSearch"
+                            placeholder="Job title, keyword, or company…" />
+                        <button class="btn btn-search" type="submit" id="heroSearchBtn">
+                            <i class="bi bi-search me-1"></i> Search
+                        </button>
+                    </form>
+
+                    <!-- Stats -->
+                    <div class="row g-3">
+                        <div class="col-4">
+                            <div class="stat-box">
+                                <h3>12K+</h3>
+                                <p>Live Jobs</p>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="stat-box">
+                                <h3>4.8K+</h3>
+                                <p>Companies</p>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="stat-box">
+                                <h3>98%</h3>
+                                <p>Success Rate</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Illustration placeholder -->
+                <div class="col-lg-5 d-none d-lg-flex justify-content-center">
+                    <div class="rounded-4 d-flex flex-column align-items-center justify-content-center gap-3 p-4"
+                        style="width:340px;height:360px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);">
+                        <i class="bi bi-rocket-takeoff" style="font-size:5rem;color:#a78bfa;"></i>
+                        <p class="text-center text-secondary mb-0">
+                            Thousands of opportunities —<br />your next chapter starts here.
+                        </p>
+                        <a href="#latest-jobs" class="btn btn-sm text-white px-4 py-2 rounded-pill"
+                            style="background:linear-gradient(135deg,#4f46e5,#06b6d4);border:none;">
+                            Browse Jobs <i class="bi bi-arrow-right ms-1"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ╔══════════════════════════════╗ -->
+    <!-- ║         LATEST JOBS          ║ -->
+    <!-- ╚══════════════════════════════╝ -->
+    <section id="latest-jobs">
+        <div class="container">
+            <div class="text-center mb-5">
+                <span class="hero-badge"><i class="bi bi-briefcase-fill me-1"></i>Fresh Listings</span>
+                <h2 class="section-title text-white mt-2">Latest Job Openings</h2>
+                <p class="section-sub mx-auto mt-2">
+                    Handpicked opportunities updated daily. Apply before deadlines close.
+                </p>
+            </div>
+
+            <!-- Filter Pills (visual only) -->
+            <div class="d-flex flex-wrap gap-2 justify-content-center mb-5">
+                <span class="badge rounded-pill px-4 py-2 fs-6"
+                    style="background:linear-gradient(135deg,#4f46e5,#06b6d4);cursor:default;">All</span>
+                <span class="badge rounded-pill px-4 py-2 fs-6"
+                    style="background:rgba(255,255,255,0.08);color:#cbd5e1;cursor:default;">Technology</span>
+                <span class="badge rounded-pill px-4 py-2 fs-6"
+                    style="background:rgba(255,255,255,0.08);color:#cbd5e1;cursor:default;">Finance</span>
+                <span class="badge rounded-pill px-4 py-2 fs-6"
+                    style="background:rgba(255,255,255,0.08);color:#cbd5e1;cursor:default;">Design</span>
+                <span class="badge rounded-pill px-4 py-2 fs-6"
+                    style="background:rgba(255,255,255,0.08);color:#cbd5e1;cursor:default;">Marketing</span>
+                <span class="badge rounded-pill px-4 py-2 fs-6"
+                    style="background:rgba(255,255,255,0.08);color:#cbd5e1;cursor:default;">Healthcare</span>
+            </div>
+
+            <div class="row g-4">
+
+                <!-- Job Card 1 -->
+                <div class="col-md-6 col-xl-4">
+                    <div class="job-card">
+                        <div class="d-flex align-items-start justify-content-between">
+                            <div class="job-logo" style="background:rgba(99,102,241,0.2);">🖥️</div>
+                            <span class="badge-type badge-fulltime">Full-Time</span>
+                        </div>
+                        <p class="job-company mb-0">Google Inc.</p>
+                        <h5 class="job-title">Senior Frontend Developer</h5>
+                        <div class="job-meta d-flex flex-wrap gap-3 mt-2">
+                            <span><i class="bi bi-geo-alt me-1"></i>Bangalore, IN</span>
+                            <span><i class="bi bi-currency-dollar me-1"></i>₹25–35 LPA</span>
+                        </div>
+                        <div class="d-flex flex-wrap gap-2 mt-3">
+                            <span class="badge"
+                                style="background:rgba(255,255,255,0.08);color:#94a3b8;font-size:.75rem;">React</span>
+                            <span class="badge"
+                                style="background:rgba(255,255,255,0.08);color:#94a3b8;font-size:.75rem;">TypeScript</span>
+                            <span class="badge"
+                                style="background:rgba(255,255,255,0.08);color:#94a3b8;font-size:.75rem;">Node.js</span>
+                        </div>
+                        <a href="#login-section" class="btn btn-apply d-block text-center">Apply Now</a>
+                    </div>
+                </div>
+
+                <!-- Job Card 2 -->
+                <div class="col-md-6 col-xl-4">
+                    <div class="job-card">
+                        <div class="d-flex align-items-start justify-content-between">
+                            <div class="job-logo" style="background:rgba(6,182,212,0.2);">📊</div>
+                            <span class="badge-type badge-remote">Remote</span>
+                        </div>
+                        <p class="job-company mb-0">Microsoft</p>
+                        <h5 class="job-title">Data Scientist – ML</h5>
+                        <div class="job-meta d-flex flex-wrap gap-3 mt-2">
+                            <span><i class="bi bi-geo-alt me-1"></i>Remote</span>
+                            <span><i class="bi bi-currency-dollar me-1"></i>₹30–45 LPA</span>
+                        </div>
+                        <div class="d-flex flex-wrap gap-2 mt-3">
+                            <span class="badge"
+                                style="background:rgba(255,255,255,0.08);color:#94a3b8;font-size:.75rem;">Python</span>
+                            <span class="badge"
+                                style="background:rgba(255,255,255,0.08);color:#94a3b8;font-size:.75rem;">TensorFlow</span>
+                            <span class="badge"
+                                style="background:rgba(255,255,255,0.08);color:#94a3b8;font-size:.75rem;">SQL</span>
+                        </div>
+                        <a href="#login-section" class="btn btn-apply d-block text-center">Apply Now</a>
+                    </div>
+                </div>
+
+                <!-- Job Card 3 -->
+                <div class="col-md-6 col-xl-4">
+                    <div class="job-card">
+                        <div class="d-flex align-items-start justify-content-between">
+                            <div class="job-logo" style="background:rgba(16,185,129,0.2);">🎨</div>
+                            <span class="badge-type badge-contract">Contract</span>
+                        </div>
+                        <p class="job-company mb-0">Flipkart</p>
+                        <h5 class="job-title">UI/UX Designer</h5>
+                        <div class="job-meta d-flex flex-wrap gap-3 mt-2">
+                            <span><i class="bi bi-geo-alt me-1"></i>Mumbai, IN</span>
+                            <span><i class="bi bi-currency-dollar me-1"></i>₹12–18 LPA</span>
+                        </div>
+                        <div class="d-flex flex-wrap gap-2 mt-3">
+                            <span class="badge"
+                                style="background:rgba(255,255,255,0.08);color:#94a3b8;font-size:.75rem;">Figma</span>
+                            <span class="badge"
+                                style="background:rgba(255,255,255,0.08);color:#94a3b8;font-size:.75rem;">Sketch</span>
+                            <span class="badge"
+                                style="background:rgba(255,255,255,0.08);color:#94a3b8;font-size:.75rem;">Adobe
+                                XD</span>
+                        </div>
+                        <a href="#login-section" class="btn btn-apply d-block text-center">Apply Now</a>
+                    </div>
+                </div>
+
+                <!-- Job Card 4 -->
+                <div class="col-md-6 col-xl-4">
+                    <div class="job-card">
+                        <div class="d-flex align-items-start justify-content-between">
+                            <div class="job-logo" style="background:rgba(245,158,11,0.2);">💼</div>
+                            <span class="badge-type badge-fulltime">Full-Time</span>
+                        </div>
+                        <p class="job-company mb-0">Amazon</p>
+                        <h5 class="job-title">Product Manager</h5>
+                        <div class="job-meta d-flex flex-wrap gap-3 mt-2">
+                            <span><i class="bi bi-geo-alt me-1"></i>Hyderabad, IN</span>
+                            <span><i class="bi bi-currency-dollar me-1"></i>₹40–55 LPA</span>
+                        </div>
+                        <div class="d-flex flex-wrap gap-2 mt-3">
+                            <span class="badge"
+                                style="background:rgba(255,255,255,0.08);color:#94a3b8;font-size:.75rem;">Agile</span>
+                            <span class="badge"
+                                style="background:rgba(255,255,255,0.08);color:#94a3b8;font-size:.75rem;">Roadmapping</span>
+                            <span class="badge"
+                                style="background:rgba(255,255,255,0.08);color:#94a3b8;font-size:.75rem;">Analytics</span>
+                        </div>
+                        <a href="#login-section" class="btn btn-apply d-block text-center">Apply Now</a>
+                    </div>
+                </div>
+
+                <!-- Job Card 5 -->
+                <div class="col-md-6 col-xl-4">
+                    <div class="job-card">
+                        <div class="d-flex align-items-start justify-content-between">
+                            <div class="job-logo" style="background:rgba(139,92,246,0.2);">⚙️</div>
+                            <span class="badge-type badge-remote">Remote</span>
+                        </div>
+                        <p class="job-company mb-0">Infosys</p>
+                        <h5 class="job-title">DevOps Engineer</h5>
+                        <div class="job-meta d-flex flex-wrap gap-3 mt-2">
+                            <span><i class="bi bi-geo-alt me-1"></i>Remote</span>
+                            <span><i class="bi bi-currency-dollar me-1"></i>₹18–28 LPA</span>
+                        </div>
+                        <div class="d-flex flex-wrap gap-2 mt-3">
+                            <span class="badge"
+                                style="background:rgba(255,255,255,0.08);color:#94a3b8;font-size:.75rem;">Docker</span>
+                            <span class="badge"
+                                style="background:rgba(255,255,255,0.08);color:#94a3b8;font-size:.75rem;">Kubernetes</span>
+                            <span class="badge"
+                                style="background:rgba(255,255,255,0.08);color:#94a3b8;font-size:.75rem;">CI/CD</span>
+                        </div>
+                        <a href="#login-section" class="btn btn-apply d-block text-center">Apply Now</a>
+                    </div>
+                </div>
+
+                <!-- Job Card 6 -->
+                <div class="col-md-6 col-xl-4">
+                    <div class="job-card">
+                        <div class="d-flex align-items-start justify-content-between">
+                            <div class="job-logo" style="background:rgba(236,72,153,0.2);">📣</div>
+                            <span class="badge-type badge-parttime">Part-Time</span>
+                        </div>
+                        <p class="job-company mb-0">Razorpay</p>
+                        <h5 class="job-title">Digital Marketing Specialist</h5>
+                        <div class="job-meta d-flex flex-wrap gap-3 mt-2">
+                            <span><i class="bi bi-geo-alt me-1"></i>Pune, IN</span>
+                            <span><i class="bi bi-currency-dollar me-1"></i>₹8–12 LPA</span>
+                        </div>
+                        <div class="d-flex flex-wrap gap-2 mt-3">
+                            <span class="badge"
+                                style="background:rgba(255,255,255,0.08);color:#94a3b8;font-size:.75rem;">SEO</span>
+                            <span class="badge"
+                                style="background:rgba(255,255,255,0.08);color:#94a3b8;font-size:.75rem;">Google
+                                Ads</span>
+                            <span class="badge"
+                                style="background:rgba(255,255,255,0.08);color:#94a3b8;font-size:.75rem;">Analytics</span>
+                        </div>
+                        <a href="#login-section" class="btn btn-apply d-block text-center">Apply Now</a>
+                    </div>
+                </div>
+
+            </div><!-- /row -->
+
+            <div class="text-center mt-5">
+                <a href="#login-section" class="btn btn-outline-light px-5 py-2 rounded-pill">
+                    View All Jobs <i class="bi bi-arrow-right ms-2"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ╔══════════════════════════════╗ -->
+    <!-- ║        LOGIN SECTION         ║ -->
+    <!-- ╚══════════════════════════════╝ -->
+    <section id="login-section">
+        <div class="container">
+            <div class="text-center mb-5">
+                <span class="hero-badge"><i class="bi bi-shield-lock-fill me-1"></i>Secure Access</span>
+                <h2 class="section-title text-white mt-2">Choose Your Portal</h2>
+                <p class="section-sub mx-auto mt-2">
+                    Login or register across User, Recruiter, and Admin portals — all secured and fast.
+                </p>
+            </div>
+
+            <div class="row g-4 justify-content-center">
+
+                <!-- ── User Login ── -->
+                <div class="col-md-6 col-xl-4">
+                    <div class="login-card user text-center">
+                        <div class="login-icon user-icon mx-auto">
+                            <i class="bi bi-person-fill"></i>
+                        </div>
+                        <h4 class="text-white">Job Seeker Login</h4>
+                        <p>Access your profile, track applications, and discover new jobs tailored for you.</p>
+                        <form action="/user/login/" method="post" id="userLoginForm">
+                            <div class="mb-3 text-start">
+                                <label for="userEmail" class="form-label small text-secondary">Email Address</label>
+                                <input type="email" class="form-control form-control-dark" id="userEmail" name="email"
+                                    placeholder="you@example.com" required />
+                            </div>
+                            <div class="mb-3 text-start">
+                                <label for="userPassword" class="form-label small text-secondary">Password</label>
+                                <input type="password" class="form-control form-control-dark" id="userPassword"
+                                    name="password" placeholder="••••••••" required />
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center mb-4 text-start">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="userRemember" name="remember" />
+                                    <label class="form-check-label small text-secondary" for="userRemember">Remember
+                                        me</label>
+                                </div>
+                                <a href="/user/forgot-password/" class="small" style="color:#a78bfa;">Forgot?</a>
+                            </div>
+                            <button type="submit" class="btn btn-login-user w-100" id="userLoginBtn">
+                                <i class="bi bi-box-arrow-in-right me-2"></i> Login as Job Seeker
+                            </button>
+                        </form>
+                        <hr class="my-3" style="border-color:rgba(255,255,255,0.1);" />
+                        <p class="small text-secondary mb-0">
+                            No account? <a href="/user/register/" style="color:#a78bfa;">Register here</a>
+                        </p>
+                    </div>
+                </div>
+
+                <!-- ── Recruiter Login ── -->
+                <div class="col-md-6 col-xl-4">
+                    <div class="login-card recruiter text-center">
+                        <div class="login-icon recruiter-icon mx-auto">
+                            <i class="bi bi-building"></i>
+                        </div>
+                        {}
+                        <h4 class="text-white">Recruiter Login</h4>
+                        <p>Post jobs, manage candidates, and streamline your hiring process with ease.</p>
+                        <form action="/recruiter/login/" method="post" id="recruiterLoginForm">
+                            <div class="mb-3 text-start">
+                                <label for="recruiterEmail" class="form-label small text-secondary">Company
+                                    Email</label>
+                                <input type="email" class="form-control form-control-dark" id="recruiterEmail"
+                                    name="email" placeholder="hr@company.com" required />
+                            </div>
+                            <div class="mb-3 text-start">
+                                <label for="recruiterPassword" class="form-label small text-secondary">Password</label>
+                                <input type="password" class="form-control form-control-dark" id="recruiterPassword"
+                                    name="password" placeholder="••••••••" required />
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center mb-4 text-start">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="recruiterRemember"
+                                        name="remember" />
+                                    <label class="form-check-label small text-secondary"
+                                        for="recruiterRemember">Remember me</label>
+                                </div>
+                                <a href="/recruiter/forgot-password/" class="small" style="color:#6ee7b7;">Forgot?</a>
+                            </div>
+                            <button type="submit" class="btn btn-login-recruiter w-100" id="recruiterLoginBtn">
+                                <i class="bi bi-building me-2"></i> Login as Recruiter
+                            </button>
+                        </form>
+                        <hr class="my-3" style="border-color:rgba(255,255,255,0.1);" />
+                        <p class="small text-secondary mb-0">
+                            New company? <a href="{% url 'recruiter_signup' %}" style="color:#6ee7b7;">Register here</a>
+                        </p>
+                    </div>
+                </div>
+
+                <!-- ── Admin Login ── -->
+                <div class="col-md-6 col-xl-4">
+                    <div class="login-card admin text-center">
+                        <div class="login-icon admin-icon mx-auto">
+                            <i class="bi bi-shield-fill-check"></i>
+                        </div>
+                        <h4 class="text-white">Admin Login</h4>
+                        <p>Manage platform settings, users, recruiters, and all job listings from one dashboard.</p>
+                        <form action="/adminlogin/" method="post" id="adminLoginForm">
+                            <div class="mb-3 text-start">
+                                <label for="adminUsername" class="form-label small text-secondary">Admin
+                                    Username</label>
+                                <input type="text" class="form-control form-control-dark" id="adminUsername"
+                                    name="username" placeholder="admin@jobconnect.com" required />
+                            </div>
+                            <div class="mb-3 text-start">
+                                <label for="adminPassword" class="form-label small text-secondary">Password</label>
+                                <input type="password" class="form-control form-control-dark" id="adminPassword"
+                                    name="password" placeholder="••••••••" required />
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center mb-4 text-start">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="adminRemember"
+                                        name="remember" />
+                                    <label class="form-check-label small text-secondary" for="adminRemember">Remember
+                                        me</label>
+                                </div>
+                                <a href="/admin/forgot-password/" class="small" style="color:#fcd34d;">Forgot?</a>
+                            </div>
+                            <button type="submit" class="btn btn-login-admin w-100" id="adminLoginBtn">
+                                <i class="bi bi-shield-lock me-2"></i> Login as Admin
+                            </button>
+                        </form>
+                        <hr class="my-3" style="border-color:rgba(255,255,255,0.1);" />
+                        <p class="small text-secondary mb-0">
+                            Admin access is <span style="color:#fcd34d;">restricted</span> to authorized personnel only.
+                        </p>
+                    </div>
+                </div>
+
+            </div><!-- /row -->
+        </div>
+    </section>
+
+    <!-- ╔══════════════════════════════╗ -->
+    <!-- ║           CONTACT            ║ -->
+    <!-- ╚══════════════════════════════╝ -->
+    <section id="contact">
+        <div class="container">
+            <div class="text-center mb-5">
+                <span class="hero-badge"><i class="bi bi-chat-dots-fill me-1"></i>Get In Touch</span>
+                <h2 class="section-title text-white mt-2">Contact Us</h2>
+                <p class="section-sub mx-auto mt-2">
+                    Questions, feedback, or partnership inquiries? Our team is here to help.
+                </p>
+            </div>
+
+            <div class="row g-5 align-items-start">
+
+                <!-- Info Column -->
+                <div class="col-lg-5">
+                    <div class="contact-card h-100">
+                        <h5 class="text-white fw-700 mb-4">Reach Out To Us</h5>
+
+                        <div class="contact-info-item">
+                            <div class="contact-info-icon"><i class="bi bi-envelope-fill"></i></div>
+                            <div>
+                                <h6 class="text-white">Email</h6>
+                                <p>support@jobconnect.in<br />careers@jobconnect.in</p>
+                            </div>
+                        </div>
+
+                        <div class="contact-info-item">
+                            <div class="contact-info-icon"><i class="bi bi-telephone-fill"></i></div>
+                            <div>
+                                <h6 class="text-white">Phone</h6>
+                                <p>+91 98765 43210<br />Mon–Fri, 9 AM – 6 PM IST</p>
+                            </div>
+                        </div>
+
+                        <div class="contact-info-item">
+                            <div class="contact-info-icon"><i class="bi bi-geo-alt-fill"></i></div>
+                            <div>
+                                <h6 class="text-white">Office</h6>
+                                <p>42, Cyber Park, Sector 20<br />Gurugram, Haryana – 122008</p>
+                            </div>
+                        </div>
+
+                        <hr style="border-color:rgba(255,255,255,0.08);" />
+
+                        <h6 class="text-white fw-600 mb-3">Follow Us</h6>
+                        <div class="d-flex gap-3">
+                            <a href="#" class="btn btn-sm rounded-circle"
+                                style="background:rgba(255,255,255,0.08);color:#cbd5e1;width:40px;height:40px;display:flex;align-items:center;justify-content:center;">
+                                <i class="bi bi-linkedin"></i>
+                            </a>
+                            <a href="#" class="btn btn-sm rounded-circle"
+                                style="background:rgba(255,255,255,0.08);color:#cbd5e1;width:40px;height:40px;display:flex;align-items:center;justify-content:center;">
+                                <i class="bi bi-twitter-x"></i>
+                            </a>
+                            <a href="#" class="btn btn-sm rounded-circle"
+                                style="background:rgba(255,255,255,0.08);color:#cbd5e1;width:40px;height:40px;display:flex;align-items:center;justify-content:center;">
+                                <i class="bi bi-instagram"></i>
+                            </a>
+                            <a href="#" class="btn btn-sm rounded-circle"
+                                style="background:rgba(255,255,255,0.08);color:#cbd5e1;width:40px;height:40px;display:flex;align-items:center;justify-content:center;">
+                                <i class="bi bi-facebook"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Form Column -->
+                <div class="col-lg-7">
+                    <div class="contact-card">
+                        <h5 class="text-white fw-700 mb-4">Send Us a Message</h5>
+                        <form action="/contact/send/" method="post" id="contactForm">
+                            <div class="row g-3">
+                                <div class="col-sm-6">
+                                    <label for="contactName" class="form-label small text-secondary">Full Name</label>
+                                    <input type="text" class="form-control form-control-dark" id="contactName"
+                                        name="name" placeholder="Your full name" required />
+                                </div>
+                                <div class="col-sm-6">
+                                    <label for="contactEmailField" class="form-label small text-secondary">Email
+                                        Address</label>
+                                    <input type="email" class="form-control form-control-dark" id="contactEmailField"
+                                        name="email" placeholder="you@example.com" required />
+                                </div>
+                                <div class="col-12">
+                                    <label for="contactPhone" class="form-label small text-secondary">Phone
+                                        Number</label>
+                                    <input type="tel" class="form-control form-control-dark" id="contactPhone"
+                                        name="phone" placeholder="+91 00000 00000" />
+                                </div>
+                                <div class="col-12">
+                                    <label for="contactSubject" class="form-label small text-secondary">Subject</label>
+                                    <select class="form-select form-control-dark" id="contactSubject" name="subject"
+                                        required>
+                                        <option value="" disabled selected>Select a topic…</option>
+                                        <option value="general">General Enquiry</option>
+                                        <option value="job">Job Listing Issue</option>
+                                        <option value="account">Account / Login Help</option>
+                                        <option value="recruiter">Recruiter Partnerships</option>
+                                        <option value="other">Other</option>
+                                    </select>
+                                </div>
+                                <div class="col-12">
+                                    <label for="contactMessage" class="form-label small text-secondary">Message</label>
+                                    <textarea class="form-control form-control-dark" id="contactMessage" name="message"
+                                        rows="5" placeholder="Describe your query in detail…" required></textarea>
+                                </div>
+                                <div class="col-12">
+                                    <button type="submit" class="btn btn-send px-5 py-2" id="contactSubmitBtn">
+                                        <i class="bi bi-send-fill me-2"></i> Send Message
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+            </div><!-- /row -->
+        </div>
+    </section>
+
+    <!-- ╔══════════════════════════════╗ -->
+    <!-- ║            FOOTER            ║ -->
+    <!-- ╚══════════════════════════════╝ -->
+    <footer class="py-5">
+        <div class="container">
+            <div class="row g-4 mb-4">
+                <div class="col-lg-4">
+                    <h5 class="text-white fw-800 mb-3">Job<span style="color:#06b6d4;">Connect</span></h5>
+                    <p class="text-secondary small mb-3">
+                        India's fastest growing job portal connecting talent with the right opportunities since 2022.
+                    </p>
+                    <div class="d-flex gap-2">
+                        <span class="badge rounded-pill px-3 py-2"
+                            style="background:rgba(79,70,229,0.2);color:#a78bfa;">12K+ Jobs</span>
+                        <span class="badge rounded-pill px-3 py-2"
+                            style="background:rgba(6,182,212,0.2);color:#67e8f9;">4.8K+ Companies</span>
+                    </div>
+                </div>
+                <div class="col-6 col-lg-2">
+                    <h6 class="text-white fw-600 mb-3">Quick Links</h6>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="#home">Home</a></li>
+                        <li class="mb-2"><a href="#latest-jobs">Latest Jobs</a></li>
+                        <li class="mb-2"><a href="#login-section">Login</a></li>
+                        <li class="mb-2"><a href="#contact">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="col-6 col-lg-2">
+                    <h6 class="text-white fw-600 mb-3">Job Seekers</h6>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="#">Browse Jobs</a></li>
+                        <li class="mb-2"><a href="#">Create Profile</a></li>
+                        <li class="mb-2"><a href="#">My Applications</a></li>
+                        <li class="mb-2"><a href="#">Career Tips</a></li>
+                    </ul>
+                </div>
+                <div class="col-6 col-lg-2">
+                    <h6 class="text-white fw-600 mb-3">Recruiters</h6>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="#">Post a Job</a></li>
+                        <li class="mb-2"><a href="#">Browse Candidates</a></li>
+                        <li class="mb-2"><a href="#">HR Dashboard</a></li>
+                        <li class="mb-2"><a href="#">Pricing</a></li>
+                    </ul>
+                </div>
+                <div class="col-6 col-lg-2">
+                    <h6 class="text-white fw-600 mb-3">Company</h6>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="#">About Us</a></li>
+                        <li class="mb-2"><a href="#">Blog</a></li>
+                        <li class="mb-2"><a href="#">Privacy Policy</a></li>
+                        <li class="mb-2"><a href="#">Terms of Use</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <hr style="border-color:rgba(255,255,255,0.07);" />
+            <div class="d-flex flex-column flex-sm-row justify-content-between align-items-center gap-2">
+                <p class="mb-0">© 2026 JobConnect. All rights reserved.</p>
+                <p class="mb-0">Made with <i class="bi bi-heart-fill text-danger"></i> in India</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap 5 Bundle (includes Popper) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>
