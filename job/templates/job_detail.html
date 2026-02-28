@@ -5,83 +5,125 @@
 {% block content %}
 <div class="container py-5">
     <div class="row">
+        
+        <!-- LEFT SECTION -->
         <div class="col-lg-8">
             <div class="card bg-dark border-secondary p-4 rounded-4 shadow-sm mb-4">
+
+                <!-- Job Header -->
                 <div class="d-flex align-items-center gap-3 mb-4">
                     <div class="bg-primary bg-opacity-10 text-primary rounded-4 d-flex align-items-center justify-content-center"
                         style="width: 80px; height: 80px; font-size: 2rem;">
                         <i class="bi bi-briefcase"></i>
                     </div>
                     <div>
-                        <h2 class="fw-bold text-white mb-1">{{ job.title }}</h2>
-                        <p class="text-secondary mb-0">{{ job.recruiter.company|default:"Company Not Listed" }} • {{
-                            job.recruiter.user.get_full_name|default:job.recruiter.user.username }}</p>
+                        <h2 class="fw-bold text-white mb-1">
+                            {{ job.title }}
+                        </h2>
+
+                        <p class="text-secondary mb-0">
+                            {{ job.recruiter.company }} • {{ job.recruiter.user.first_name }} {{ job.recruiter.user.last_name }}
+                        </p>
                     </div>
                 </div>
 
+                <!-- Job Stats -->
                 <div class="row g-3 mb-4 text-center">
                     <div class="col-4">
                         <div class="bg-secondary bg-opacity-10 p-2 rounded-3">
                             <small class="text-secondary d-block">Experience</small>
-                            <span class="fw-bold">{{ job.experience }}</span>
+                            <span class="fw-bold text-white">
+                                {{ job.experience }} Years
+                            </span>
                         </div>
                     </div>
+
                     <div class="col-4">
                         <div class="bg-secondary bg-opacity-10 p-2 rounded-3">
                             <small class="text-secondary d-block">Salary</small>
-                            <span class="fw-bold">₹{{ job.salary }} LPA</span>
+                            <span class="fw-bold text-white">
+                                ₹{{ job.salary }} LPA
+                            </span>
                         </div>
                     </div>
+
                     <div class="col-4">
                         <div class="bg-secondary bg-opacity-10 p-2 rounded-3">
                             <small class="text-secondary d-block">Posted On</small>
-                            <span class="fw-bold">{{ job.creationdate }}</span>
+                            <span class="fw-bold text-white">
+                                {{ job.creationdate|date:"M d, Y" }}
+                            </span>
                         </div>
                     </div>
                 </div>
 
+                <!-- Job Description -->
                 <div class="mb-4">
                     <h5 class="fw-bold text-white mb-3">Job Description</h5>
-                    <p class="text-secondary" style="line-height: 1.6;">{{ job.description }}</p>
+                    <p class="text-secondary" style="line-height: 1.6;">
+                        {{ job.description }}
+                    </p>
                 </div>
 
                 <div class="mb-4">
                     <h5 class="fw-bold text-white mb-3">Required Skills</h5>
                     <div class="d-flex flex-wrap gap-2">
-                        {% for skill in job.skills.split %}
-                        <span class="badge bg-primary bg-opacity-10 text-primary px-3 py-2 rounded-pill">{{ skill
-                            }}</span>
-                        {% endfor %}
+
+                        {% if job.skills %}
+                            {% for skill in job.skills.split %}
+                                <span class="badge bg-primary bg-opacity-10 text-primary px-3 py-2 rounded-pill">
+                                    {{ skill }}
+                                </span>
+                            {% endfor %}
+                        {% else %}
+                            <span class="text-secondary">No skills mentioned</span>
+                        {% endif %}
+
                     </div>
                 </div>
+
             </div>
         </div>
 
+        <!-- RIGHT SECTION -->
         <div class="col-lg-4">
             <div class="card bg-dark border-secondary p-4 rounded-4 shadow-sm sticky-top" style="top: 100px;">
+                
                 <h5 class="fw-bold text-white mb-4">Application Timeline</h5>
+
                 <div class="mb-4">
                     <p class="small text-secondary mb-1">Applications Start</p>
-                    <p class="fw-bold"><i class="bi bi-calendar-check me-2 text-success"></i>{{ job.start_date }}</p>
+                    <p class="fw-bold text-white">
+                        <i class="bi bi-calendar-check me-2 text-success"></i>
+                        {{ job.start_date|date:"M d, Y" }}
+                    </p>
                 </div>
+
                 <div class="mb-4">
                     <p class="small text-secondary mb-1">Applications Close</p>
-                    <p class="fw-bold"><i class="bi bi-calendar-x me-2 text-danger"></i>{{ job.end_date }}</p>
+                    <p class="fw-bold text-white">
+                        <i class="bi bi-calendar-x me-2 text-danger"></i>
+                        {{ job.end_date|date:"M d, Y" }}
+                    </p>
                 </div>
 
                 <hr class="border-secondary mb-4">
 
                 {% if request.user.is_authenticated %}
-                <a href="{% url 'applyforjob' job.id %}" class="btn btn-primary-gradient w-100 py-3 rounded-3 fw-bold">
-                    Apply for this Job
-                </a>
+                    <a href="{% url 'applyforjob' job.id %}" 
+                       class="btn btn-primary w-100 py-3 rounded-3 fw-bold">
+                        Apply for this Job
+                    </a>
                 {% else %}
-                <a href="{% url 'userlogin' %}" class="btn btn-outline-custom w-100 py-3 rounded-3 fw-bold">
-                    Login to Apply
-                </a>
+                    <a href="{% url 'userlogin' %}" 
+                       class="btn btn-outline-light w-100 py-3 rounded-3 fw-bold">
+                        Login to Apply
+                    </a>
                 {% endif %}
+
             </div>
         </div>
+
     </div>
 </div>
 {% endblock %}

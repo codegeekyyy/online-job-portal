@@ -4,119 +4,211 @@
 
 {% block content %}
 <div class="container py-5">
-    <!-- Alerts -->
+
+    <!-- Success Message -->
     {% if error == "no" %}
-    <div class="alert alert-success alert-custom d-flex align-items-center gap-2 mb-4 py-2 small">
-        <i class="bi bi-check-circle-fill"></i><span>Profile updated successfully!</span>
+    <div class="alert alert-success d-flex align-items-center gap-2 mb-4 py-2 small">
+        <i class="bi bi-check-circle-fill"></i>
+        <span>Profile updated successfully!</span>
     </div>
     {% endif %}
+
+    <!-- Error Message -->
     {% if error == "yes" %}
-    <div class="alert alert-danger alert-custom d-flex align-items-center gap-2 mb-4 py-2 small">
-        <i class="bi bi-exclamation-triangle-fill"></i><span>Failed to update profile. Please try again.</span>
+    <div class="alert alert-danger d-flex align-items-center gap-2 mb-4 py-2 small">
+        <i class="bi bi-exclamation-triangle-fill"></i>
+        <span>Failed to update profile. Please try again.</span>
     </div>
     {% endif %}
 
     <div class="row g-4">
-        <!-- Left: Profile Card -->
+
+        <!-- ================= LEFT SIDE PROFILE CARD ================= -->
         <div class="col-lg-4">
             <div class="card bg-dark border-secondary p-4 rounded-4 shadow-sm text-center">
+
+                <!-- Profile Image -->
                 <div class="d-flex justify-content-center mb-3">
                     <div class="bg-primary bg-opacity-10 text-primary rounded-circle d-flex align-items-center justify-content-center border border-secondary"
-                        style="width: 110px; height: 110px; overflow: hidden;">
+                        style="width:110px;height:110px;overflow:hidden;">
+
                         {% if student.image %}
-                        <img src="{{ student.image.url }}" alt="Profile Photo"
-                            style="width: 100%; height: 100%; object-fit: cover;" />
+                            <img src="{{ student.image.url }}" 
+                                 alt="Profile Photo"
+                                 style="width:100%;height:100%;object-fit:cover;">
                         {% else %}
-                        <i class="bi bi-person-fill fs-1"></i>
+                            <i class="bi bi-person-fill fs-1"></i>
                         {% endif %}
+
                     </div>
                 </div>
-                <h4 class="text-white fw-bold mb-1">{{ student.user.get_full_name|default:student.user.username }}</h4>
-                <p class="text-secondary small mb-3">{{ student.user.email }}</p>
 
+                <!-- Name -->
+                <h4 class="text-white fw-bold mb-1">
+                    {{ student.user.get_full_name|default:student.user.username }}
+                </h4>
+
+                <!-- Email -->
+                <p class="text-secondary small mb-3">
+                    {{ student.user.email }}
+                </p>
+
+                <!-- Details -->
                 <div class="d-flex flex-column gap-2 text-start mt-3 small">
+
                     <div class="d-flex align-items-center gap-2">
-                        <i class="bi bi-telephone text-accent"></i>
-                        <span class="text-secondary">{{ student.mobile|default:"Not set" }}</span>
+                        <i class="bi bi-telephone text-info"></i>
+                        <span class="text-secondary">
+                            {{ student.mobile|default:"Not set" }}
+                        </span>
                     </div>
+
                     <div class="d-flex align-items-center gap-2">
-                        <i class="bi bi-gender-ambiguous text-accent"></i>
-                        <span class="text-secondary">{{ student.gender|default:"Not set" }}</span>
+                        <i class="bi bi-gender-ambiguous text-info"></i>
+                        <span class="text-secondary">
+                            {{ student.gender|default:"Not set" }}
+                        </span>
                     </div>
+
                     <div class="d-flex align-items-center gap-2">
-                        <i class="bi bi-person-badge text-accent"></i>
+                        <i class="bi bi-person-badge text-info"></i>
                         <span class="text-secondary">Job Seeker</span>
                     </div>
+
                 </div>
 
-                <hr class="border-secondary my-4" />
+                <hr class="border-secondary my-4">
+
+                <!-- Stats -->
                 <div class="row g-2">
                     <div class="col-6">
                         <div class="bg-white bg-opacity-5 p-3 rounded-3">
-                            <h4 class="fw-bold text-accent mb-0">0</h4>
+                            <h4 class="fw-bold text-info mb-0">0</h4>
                             <p class="text-secondary small mb-0">Applied</p>
                         </div>
                     </div>
                     <div class="col-6">
                         <div class="bg-white bg-opacity-5 p-3 rounded-3">
-                            <h4 class="fw-bold text-accent mb-0">0</h4>
+                            <h4 class="fw-bold text-info mb-0">0</h4>
                             <p class="text-secondary small mb-0">Saved</p>
                         </div>
                     </div>
                 </div>
+
             </div>
         </div>
 
-        <!-- Right: Edit Form -->
+        <!-- ================= RIGHT SIDE EDIT FORM ================= -->
         <div class="col-lg-8">
             <div class="card bg-dark border-secondary p-4 rounded-4 shadow-sm">
-                <h5 class="text-white fw-bold mb-4"><i class="bi bi-pencil-square me-2 text-accent"></i>Edit Profile
+
+                <h5 class="text-white fw-bold mb-4">
+                    <i class="bi bi-pencil-square me-2 text-info"></i>
+                    Edit Profile
                 </h5>
-                <form action="{% url 'userhome' %}" method="post" enctype="multipart/form-data">
+
+                <form action="{% url 'userhome' %}" 
+                      method="post" 
+                      enctype="multipart/form-data">
                     {% csrf_token %}
+
                     <div class="row g-3">
+
+                        <!-- First Name -->
                         <div class="col-sm-6">
-                            <label class="form-label small text-secondary">First Name</label>
-                            <input type="text" class="form-control bg-transparent border-secondary text-white"
-                                name="fname" value="{{ student.user.first_name }}" required />
+                            <label class="form-label small text-secondary">
+                                First Name
+                            </label>
+                            <input type="text"
+                                   name="fname"
+                                   class="form-control bg-transparent border-secondary text-white"
+                                   value="{{ student.user.first_name }}"
+                                   required>
                         </div>
+
+                        <!-- Last Name -->
                         <div class="col-sm-6">
-                            <label class="form-label small text-secondary">Last Name</label>
-                            <input type="text" class="form-control bg-transparent border-secondary text-white"
-                                name="lname" value="{{ student.user.last_name }}" required />
+                            <label class="form-label small text-secondary">
+                                Last Name
+                            </label>
+                            <input type="text"
+                                   name="lname"
+                                   class="form-control bg-transparent border-secondary text-white"
+                                   value="{{ student.user.last_name }}"
+                                   required>
                         </div>
+
+                        <!-- Contact -->
                         <div class="col-sm-6">
-                            <label class="form-label small text-secondary">Contact</label>
-                            <input type="tel" class="form-control bg-transparent border-secondary text-white"
-                                name="contact" value="{{ student.mobile }}" required />
+                            <label class="form-label small text-secondary">
+                                Contact
+                            </label>
+                            <input type="tel"
+                                   name="contact"
+                                   class="form-control bg-transparent border-secondary text-white"
+                                   value="{{ student.mobile }}"
+                                   required>
                         </div>
+
+                        <!-- Gender -->
                         <div class="col-sm-6">
-                            <label class="form-label small text-secondary">Gender</label>
-                            <select class="form-select bg-dark border-secondary text-white" name="gender" required>
-                                <option value="" disabled {% if not student.gender %}selected{% endif %}>Select gender
+                            <label class="form-label small text-secondary">
+                                Gender
+                            </label>
+                            <select name="gender"
+                                    class="form-select bg-dark border-secondary text-white"
+                                    required>
+
+                                <option value="" disabled {% if not student.gender %}selected{% endif %}>
+                                    Select Gender
                                 </option>
-                                <option value="Male" {% if student.gender == "Male" %}selected{% endif %}>Male</option>
-                                <option value="Female" {% if student.gender == "Female" %}selected{% endif %}>Female
+
+                                <option value="Male" {% if student.gender == "Male" %}selected{% endif %}>
+                                    Male
                                 </option>
-                                <option value="Other" {% if student.gender == "Other" %}selected{% endif %}>Other</option>
-                                <option value="Prefer not to say" {% if student.gender == "Prefer not to say" %}selected{%
-                                    endif %}>Prefer not to say</option>
+
+                                <option value="Female" {% if student.gender == "Female" %}selected{% endif %}>
+                                    Female
+                                </option>
+
+                                <option value="Other" {% if student.gender == "Other" %}selected{% endif %}>
+                                    Other
+                                </option>
+
+                                <option value="Prefer not to say" {% if student.gender == "Prefer not to say" %}selected{% endif %}>
+                                    Prefer not to say
+                                </option>
+
                             </select>
                         </div>
+
+                        <!-- Profile Image -->
                         <div class="col-12 mt-3">
-                            <label class="form-label small text-secondary">Profile Photo (optional)</label>
-                            <input type="file" class="form-control bg-transparent border-secondary text-white"
-                                name="image" accept="image/*" />
+                            <label class="form-label small text-secondary">
+                                Profile Photo (optional)
+                            </label>
+                            <input type="file"
+                                   name="image"
+                                   accept="image/*"
+                                   class="form-control bg-transparent border-secondary text-white">
                         </div>
+
                     </div>
+
+                    <!-- Submit Button -->
                     <div class="mt-4">
-                        <button type="submit" class="btn btn-primary-gradient px-4 py-2 rounded-pill fw-bold">
-                            <i class="bi bi-save me-2"></i>Save Changes
+                        <button type="submit"
+                                class="btn btn-primary px-4 py-2 rounded-pill fw-bold">
+                            <i class="bi bi-save me-2"></i>
+                            Save Changes
                         </button>
                     </div>
+
                 </form>
+
             </div>
         </div>
+
     </div>
 </div>
 {% endblock %}
