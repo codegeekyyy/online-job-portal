@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block title %}Admin Dashboard | JobConnect{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row g-4 mb-5">
+        <div class="col-md-6 col-lg-3">
+            <div class="card bg-dark border-secondary p-4 rounded-4 shadow-sm text-center">
+                <h3 class="fw-bold text-accent">{{ recruiter_acc.count }}</h3>
+                <p class="text-secondary small mb-0">Total Recruiters</p>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-3">
+            <div class="card bg-dark border-secondary p-4 rounded-4 shadow-sm text-center">
+                <h3 class="fw-bold text-primary">{{ student_acc.count }}</h3>
+                <p class="text-secondary small mb-0">Total Job Seekers</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card bg-dark border-secondary p-4 rounded-4 shadow-sm">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h4 class="fw-bold mb-0">Platform Overview</h4>
+                    <div class="dropdown">
+                        <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button"
+                            data-bs-toggle="dropdown">
+                            Actions
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-dark">
+                            <li><a class="dropdown-item" href="{% url 'recruiter_pending' %}">Approve Recruiters</a>
+                            </li>
+                            <li><a class="dropdown-item" href="{% url 'view_users' %}">Manage Users</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <p class="text-secondary">Welcome to the Admin Dashboard. Use the navigation above or the actions menu
+                    to manage users and recruiters.</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

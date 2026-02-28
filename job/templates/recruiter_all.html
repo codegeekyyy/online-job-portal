@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block title %}All Recruiters | JobConnect{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="card bg-dark border-secondary p-4 rounded-4 shadow-sm">
+        <h4 class="fw-bold mb-4"><i class="bi bi-people me-2 text-primary"></i>All Registered Recruiters</h4>
+
+        <div class="table-responsive">
+            <table class="table table-dark table-hover border-secondary">
+                <thead>
+                    <tr class="text-secondary">
+                        <th>Recruiter Name</th>
+                        <th>Email</th>
+                        <th>Company</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for i in data %}
+                    <tr>
+                        <td>{{ i.user.get_full_name }}</td>
+                        <td>{{ i.user.username }}</td>
+                        <td>{{ i.company }}</td>
+                        <td>
+                            {% if i.status == 'approved' %}
+                            <span class="badge bg-success bg-opacity-10 text-success px-3">Approved</span>
+                            {% elif i.status == 'pending' %}
+                            <span class="badge bg-warning bg-opacity-10 text-warning px-3">Pending</span>
+                            {% else %}
+                            <span class="badge bg-danger bg-opacity-10 text-danger px-3">{{ i.status }}</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a href="{% url 'delete_recruiter' i.user.id %}"
+                                class="btn btn-sm btn-outline-danger rounded-pill"
+                                onclick="return confirm('Are you sure you want to delete this recruiter?')">Delete</a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" class="text-center py-4 text-secondary">No recruiters found.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

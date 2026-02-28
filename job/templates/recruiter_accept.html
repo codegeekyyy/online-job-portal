@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block title %}Approved Recruiters | JobConnect{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="card bg-dark border-secondary p-4 rounded-4 shadow-sm">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h4 class="fw-bold mb-0"><i class="bi bi-check-circle-fill me-2 text-success"></i>Approved Recruiters</h4>
+            <a href="{% url 'adminhome' %}" class="btn btn-outline-custom btn-sm rounded-pill px-4">Dashboard</a>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-dark table-hover border-secondary">
+                <thead>
+                    <tr class="text-secondary">
+                        <th>Recruiter Name</th>
+                        <th>Email</th>
+                        <th>Company</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for i in data %}
+                    <tr>
+                        <td>{{ i.user.get_full_name }}</td>
+                        <td>{{ i.user.username }}</td>
+                        <td>{{ i.company }}</td>
+                        <td><span class="badge bg-success bg-opacity-10 text-success px-3">Approved</span></td>
+                        <td>
+                            <a href="{% url 'change_status' i.id %}"
+                                class="btn btn-sm btn-outline-accent rounded-pill">View/Update</a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" class="text-center py-4 text-secondary">No approved recruiters.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

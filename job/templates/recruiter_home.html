@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+
+{% block title %}Recruiter Profile | JobConnect{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card bg-dark border-secondary p-4 shadow-lg rounded-4">
+                <div class="d-flex align-items-center gap-4 mb-4">
+                    {% if recruiter.image %}
+                    <img src="{{ recruiter.image.url }}" class="rounded-circle border border-secondary shadow"
+                        style="width: 100px; height: 100px; object-fit: cover;">
+                    {% else %}
+                    <div class="rounded-circle bg-secondary bg-opacity-10 d-flex align-items-center justify-content-center border border-secondary"
+                        style="width: 100px; height: 100px; font-size: 2.5rem;">
+                        <i class="bi bi-building"></i>
+                    </div>
+                    {% endif %}
+                    <div>
+                        <h3 class="fw-bold text-white mb-1">{{ recruiter.user.get_full_name }}</h3>
+                        <p class="text-success mb-0 fw-600"><i class="bi bi-patch-check-fill me-1"></i> Verified
+                            Recruiter at {{ recruiter.company }}</p>
+                    </div>
+                </div>
+
+                {% if error == "no" %}
+                <div class="alert alert-success alert-custom mb-4 py-2 small">
+                    <i class="bi bi-check-circle-fill me-2"></i> Profile updated successfully!
+                </div>
+                {% elif error == "yes" %}
+                <div class="alert alert-danger alert-custom mb-4 py-2 small">
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i> Error updating profile.
+                </div>
+                {% endif %}
+
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="row g-3">
+                        <div class="col-sm-6 mb-3">
+                            <label class="form-label small text-secondary">First Name</label>
+                            <input type="text" name="fname"
+                                class="form-control bg-transparent border-secondary text-white"
+                                value="{{ recruiter.user.first_name }}">
+                        </div>
+                        <div class="col-sm-6 mb-3">
+                            <label class="form-label small text-secondary">Last Name</label>
+                            <input type="text" name="lname"
+                                class="form-control bg-transparent border-secondary text-white"
+                                value="{{ recruiter.user.last_name }}">
+                        </div>
+                        <div class="col-sm-6 mb-3">
+                            <label class="form-label small text-secondary">Contact Number</label>
+                            <input type="text" name="contact"
+                                class="form-control bg-transparent border-secondary text-white"
+                                value="{{ recruiter.mobile }}">
+                        </div>
+                        <div class="col-sm-6 mb-3">
+                            <label class="form-label small text-secondary">Gender</label>
+                            <select name="gender" class="form-select bg-dark border-secondary text-white">
+                                <option value="Male" {% if recruiter.gender == 'Male' %}selected{% endif %}>Male</option>
+                                <option value="Female" {% if recruiter.gender == 'Female' %}selected{% endif %}>Female
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary-gradient py-2 px-5 rounded-pill mt-4 fw-bold">
+                        Update Profile
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

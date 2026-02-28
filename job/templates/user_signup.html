@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+
+{% block title %}User Signup | JobConnect{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card bg-dark border-secondary p-4 shadow-lg rounded-4">
+                <div class="text-center mb-4">
+                    <h3 class="fw-bold">Create Job Seeker Account</h3>
+                    <p class="text-secondary small">Join thousands of job seekers and find your dream career.</p>
+                </div>
+
+                {% if error == "no" %}
+                <div class="alert alert-success alert-custom mb-4 py-2 small">
+                    <i class="bi bi-check-circle-fill me-2"></i> Signup Successful! <a href="{% url 'userlogin' %}"
+                        class="alert-link">Login here</a>.
+                </div>
+                {% elif error == "yes" %}
+                <div class="alert alert-danger alert-custom mb-4 py-2 small">
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i> Something went wrong. Email might already
+                    exist.
+                </div>
+                {% endif %}
+
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="row g-3 mb-3">
+                        <div class="col-sm-6">
+                            <label class="form-label small text-secondary">First Name</label>
+                            <input type="text" name="fname"
+                                class="form-control bg-transparent border-secondary text-white" required>
+                        </div>
+                        <div class="col-sm-6">
+                            <label class="form-label small text-secondary">Last Name</label>
+                            <input type="text" name="lname"
+                                class="form-control bg-transparent border-secondary text-white" required>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label small text-secondary">Email Address</label>
+                        <input type="email" name="email" class="form-control bg-transparent border-secondary text-white"
+                            required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label small text-secondary">Password</label>
+                        <input type="password" name="pwd"
+                            class="form-control bg-transparent border-secondary text-white" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label small text-secondary">Mobile Number</label>
+                        <input type="text" name="contact"
+                            class="form-control bg-transparent border-secondary text-white" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label small text-secondary">Gender</label>
+                        <div class="d-flex gap-4">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="gender" value="Male" id="male"
+                                    checked>
+                                <label class="form-check-label small" for="male">Male</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="gender" value="Female" id="female">
+                                <label class="form-check-label small" for="female">Female</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label small text-secondary">Profile Image</label>
+                        <input type="file" name="image" class="form-control bg-transparent border-secondary text-white">
+                    </div>
+
+                    <button type="submit" class="btn btn-primary-gradient w-100 py-2 mb-3 rounded-3">
+                        Register Now
+                    </button>
+                </form>
+
+                <div class="text-center small">
+                    <span class="text-secondary">Already have an account?</span>
+                    <a href="{% url 'userlogin' %}" class="text-accent fw-600 text-decoration-none ms-1">Login here</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

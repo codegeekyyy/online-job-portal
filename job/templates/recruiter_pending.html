@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block title %}Pending Recruiters | JobConnect{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="card bg-dark border-secondary p-4 rounded-4 shadow-sm">
+        <h4 class="fw-bold mb-4"><i class="bi bi-hourglass-split me-2 text-warning"></i>Pending Recruiter Approvals</h4>
+
+        <div class="table-responsive">
+            <table class="table table-dark table-hover border-secondary">
+                <thead>
+                    <tr class="text-secondary">
+                        <th>Recruiter Name</th>
+                        <th>Email</th>
+                        <th>Company</th>
+                        <th>Contact</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for i in data %}
+                    <tr>
+                        <td>{{ i.user.get_full_name }}</td>
+                        <td>{{ i.user.username }}</td>
+                        <td>{{ i.company }}</td>
+                        <td>{{ i.mobile }}</td>
+                        <td><span class="badge bg-warning bg-opacity-10 text-warning px-3">{{ i.status }}</span></td>
+                        <td>
+                            <a href="{% url 'change_status' i.id %}"
+                                class="btn btn-sm btn-outline-accent rounded-pill">View/Update</a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" class="text-center py-4 text-secondary">No pending recruiters.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

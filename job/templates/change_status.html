@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+
+{% block title %}Update Status | Admin | JobConnect{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card bg-dark border-secondary p-4 rounded-4 shadow-lg">
+                <div class="text-center mb-4">
+                    <div class="bg-primary bg-opacity-10 text-primary rounded-circle d-inline-flex align-items-center justify-content-center mb-3"
+                        style="width: 64px; height: 64px;">
+                        <i class="bi bi-person-check fs-2"></i>
+                    </div>
+                    <h3 class="fw-bold">Update Recruiter Status</h3>
+                    <p class="text-secondary small">Review and approve/reject {{ recruiter.user.get_full_name }}'s
+                        request.</p>
+                </div>
+
+                <div class="mb-4">
+                    <div class="bg-secondary bg-opacity-5 p-3 rounded-3 ">
+                        <div class="row g-2 small">
+                            <div class="col-4 text-secondary">Recruiter:</div>
+                            <div class="col-8 fw-bold">{{ recruiter.user.get_full_name }}</div>
+                            <div class="col-4 text-secondary">Company:</div>
+                            <div class="col-8 fw-bold">{{ recruiter.company }}</div>
+                            <div class="col-4 text-secondary">Current Status:</div>
+                            <div class="col-8">
+                                <span
+                                    class="badge {% if recruiter.status == 'approved' %}bg-success{% elif recruiter.status == 'rejected' %}bg-danger{% else %}bg-warning{% endif %} bg-opacity-10 {% if recruiter.status == 'approved' %}text-success{% elif recruiter.status == 'rejected' %}text-danger{% else %}text-warning{% endif %} px-3">
+                                    {{ recruiter.status|upper }}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {% if error == "no" %}
+                <div class="alert alert-success alert-custom mb-4 py-2 small">
+                    <i class="bi bi-check-circle-fill me-2"></i> Status updated successfully! <a
+                        href="{% url 'recruiter_all' %}" class="alert-link">Back to list</a>.
+                </div>
+                {% elif error == "yes" %}
+                <div class="alert alert-danger alert-custom mb-4 py-2 small">
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i> Error updating status.
+                </div>
+                {% endif %}
+
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="mb-4">
+                        <label class="form-label small text-secondary">Set New Status</label>
+                        <select name="status" class="form-select bg-dark border-secondary text-white py-2" required>
+                            <option value="pending" {% if recruiter.status == 'pending' %}selected{% endif %}>Pending
+                                Approval</option>
+                            <option value="approved" {% if recruiter.status == 'approved' %}selected{% endif %}>Approve /
+                                Accept</option>
+                            <option value="rejected" {% if recruiter.status == 'rejected' %}selected{% endif %}>Reject
+                            </option>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary-gradient w-100 py-2 rounded-pill fw-bold">
+                        Confirm Status Change
+                    </button>
+                    <a href="{% url 'recruiter_pending' %}"
+                        class="btn btn-outline-secondary w-100 py-2 mt-2 rounded-pill small">Cancel</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

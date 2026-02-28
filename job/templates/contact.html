@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+
+{% block title %}Contact Us | JobConnect{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row align-items-center g-5">
+        <div class="col-lg-6">
+            <div class="pe-lg-5">
+                <h2 class="display-5 fw-bold text-white mb-4">Get in Touch</h2>
+                <p class="text-secondary fs-5 mb-5">Have questions about our platform? Our team is here to help you
+                    navigate your career journey.</p>
+
+                <div class="d-flex gap-4 mb-4">
+                    <div class="bg-primary bg-opacity-10 text-primary rounded-4 d-flex align-items-center justify-content-center"
+                        style="width: 56px; height: 56px;">
+                        <i class="bi bi-envelope-fill fs-4"></i>
+                    </div>
+                    <div>
+                        <h6 class="fw-bold text-white mb-1">Email Support</h6>
+                        <p class="text-secondary mb-0">harshdeep.s5423@gmail.com</p>
+                    </div>
+                </div>
+                <div class="mt-5">
+                    <h6 class="fw-bold text-white mb-3">Follow our journey</h6>
+                    <div class="d-flex gap-3">
+                        <a href="#" class="btn btn-outline-custom rounded-circle p-2"
+                            style="width: 44px; height: 44px;"><i class="bi bi-twitter-x"></i></a>
+                        <a href="#" class="btn btn-outline-custom rounded-circle p-2"
+                            style="width: 44px; height: 44px;"><i class="bi bi-linkedin"></i></a>
+                        <a href="#" class="btn btn-outline-custom rounded-circle p-2"
+                            style="width: 44px; height: 44px;"><i class="bi bi-instagram"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6">
+            <div class="card bg-dark border-secondary p-4 p-md-5 rounded-4 shadow-lg">
+                <form>
+                    <div class="row g-3">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label small text-secondary">Your Name</label>
+                            <input type="text" class="form-control bg-transparent border-secondary text-white py-2">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label small text-secondary">Email Address</label>
+                            <input type="email" class="form-control bg-transparent border-secondary text-white py-2">
+                        </div>
+                        <div class="col-12 mb-3">
+                            <label class="form-label small text-secondary">Subject</label>
+                            <input type="text" class="form-control bg-transparent border-secondary text-white py-2">
+                        </div>
+                        <div class="col-12 mb-4">
+                            <label class="form-label small text-secondary">Message</label>
+                            <textarea class="form-control bg-transparent border-secondary text-white"
+                                rows="5"></textarea>
+                        </div>
+                        <div class="col-12">
+                            <button type="submit" class="btn btn-primary-gradient w-100 py-3 rounded-3 fw-bold">Send
+                                Message</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

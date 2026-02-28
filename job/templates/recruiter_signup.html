@@ -1,368 +1,102 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends 'base.html' %}
 
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Recruiter Sign Up | JobConnect</title>
-    <meta name="description" content="Create a recruiter account on JobConnect to post jobs and discover top talent." />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
-        rel="stylesheet" />
-    <style>
-        :root {
-            --primary: #10b981;
-            --accent: #06b6d4;
-            --dark: #0f172a;
-            --card-bg: #1e293b;
-            --muted: #94a3b8;
-        }
+{% block title %}Recruiter Signup | JobConnect{% endblock %}
 
-        * {
-            font-family: 'Inter', sans-serif;
-        }
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-7">
+            <div class="card bg-dark border-secondary p-4 shadow-lg rounded-4">
+                <div class="text-center mb-4">
+                    <h3 class="fw-bold">Recruiter Registration</h3>
+                    <p class="text-secondary small">Hire the best talent for your organization.</p>
+                </div>
 
-        body {
-            background-color: var(--dark);
-            color: #e2e8f0;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
+                {% if error == "no" %}
+                <div class="alert alert-success alert-custom mb-4 py-2 small">
+                    <i class="bi bi-check-circle-fill me-2"></i> Registration successful! Your account is pending admin
+                    approval.
+                </div>
+                {% elif error == "yes" %}
+                <div class="alert alert-danger alert-custom mb-4 py-2 small">
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i> Registration failed. Email may already be
+                    registered.
+                </div>
+                {% endif %}
 
-        .navbar {
-            background: rgba(15, 23, 42, 0.95);
-            backdrop-filter: blur(12px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.07);
-        }
-
-        .navbar-brand span {
-            color: var(--accent);
-        }
-
-        .auth-wrapper {
-            flex: 1;
-            display: flex;
-            align-items: flex-start;
-            justify-content: center;
-            padding: 100px 16px 60px;
-            background: linear-gradient(135deg, #064e3b 0%, #0f172a 55%, #164e63 100%);
-        }
-
-        .auth-card {
-            background: var(--card-bg);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 24px;
-            padding: 48px 40px;
-            width: 100%;
-            max-width: 560px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .auth-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 3px;
-            background: linear-gradient(90deg, #10b981, #06b6d4);
-        }
-
-        .auth-icon {
-            width: 72px;
-            height: 72px;
-            border-radius: 18px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2rem;
-            margin: 0 auto 24px;
-            background: rgba(16, 185, 129, 0.15);
-            color: #6ee7b7;
-        }
-
-        .form-label {
-            color: var(--muted);
-            font-size: .85rem;
-            margin-bottom: 6px;
-        }
-
-        .form-control-dark,
-        .form-select-dark {
-            background: rgba(255, 255, 255, 0.05) !important;
-            border: 1px solid rgba(255, 255, 255, 0.1) !important;
-            color: #e2e8f0 !important;
-            border-radius: 10px;
-            padding: 11px 16px;
-        }
-
-        .form-control-dark::placeholder {
-            color: var(--muted);
-        }
-
-        .form-control-dark:focus,
-        .form-select-dark:focus {
-            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.25) !important;
-            border-color: var(--primary) !important;
-            outline: none;
-        }
-
-        .form-select-dark option {
-            background: #1e293b;
-            color: #e2e8f0;
-        }
-
-        .input-icon-wrap {
-            position: relative;
-        }
-
-        .input-icon-wrap .bi {
-            position: absolute;
-            left: 14px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--muted);
-            font-size: 1rem;
-        }
-
-        .input-icon-wrap input,
-        .input-icon-wrap select {
-            padding-left: 40px !important;
-        }
-
-        /* file upload */
-        .file-upload-box {
-            border: 2px dashed rgba(255, 255, 255, 0.12);
-            border-radius: 12px;
-            padding: 24px;
-            text-align: center;
-            cursor: pointer;
-            transition: border-color .2s;
-        }
-
-        .file-upload-box:hover {
-            border-color: rgba(16, 185, 129, 0.5);
-        }
-
-        .file-upload-box i {
-            font-size: 2rem;
-            color: #6ee7b7;
-        }
-
-        .file-upload-box input[type="file"] {
-            position: absolute;
-            inset: 0;
-            opacity: 0;
-            cursor: pointer;
-        }
-
-        .btn-auth {
-            background: linear-gradient(135deg, #10b981, #06b6d4);
-            border: none;
-            color: #fff;
-            border-radius: 10px;
-            font-weight: 600;
-            padding: 13px;
-            font-size: 1rem;
-            transition: opacity .2s;
-        }
-
-        .btn-auth:hover {
-            opacity: .88;
-            color: #fff;
-        }
-
-        .section-divider {
-            font-size: .75rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: var(--muted);
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin: 28px 0 20px;
-        }
-
-        .section-divider::before,
-        .section-divider::after {
-            content: '';
-            flex: 1;
-            height: 1px;
-            background: rgba(255, 255, 255, 0.08);
-        }
-
-        footer {
-            background: #060c1a;
-            border-top: 1px solid rgba(255, 255, 255, 0.06);
-            color: var(--muted);
-            font-size: .85rem;
-            text-align: center;
-            padding: 18px;
-        }
-    </style>
-</head>
-
-<body>
-
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg fixed-top">
-        <div class="container">
-            <a class="navbar-brand fw-bold fs-4 text-white" href="/">Job<span>Connect</span></a>
-            <div class="d-flex gap-2">
-                <a href="/recruiterlogin/" class="btn btn-outline-light btn-sm rounded-pill px-3">Sign In</a>
-                <a href="/" class="btn btn-outline-light btn-sm rounded-pill px-3">
-                    <i class="bi bi-house-door me-1"></i>Home
-                </a>
-            </div>
-        </div>
-    </nav>
-
-    <div class="auth-wrapper">
-        <div class="auth-card">
-            <div class="auth-icon mx-auto">
-                <i class="bi bi-person-plus-fill"></i>
-            </div>
-            <h1 class="text-white fw-800 text-center mb-1" style="font-size:1.6rem;">Create Recruiter Account</h1>
-            <p class="text-center mb-4" style="color:var(--muted);font-size:.9rem;">
-                Join JobConnect as a recruiter — post jobs and find the best talent
-            </p>
-
-            <!-- Error Alert -->
-            {% if error == "yes" %}
-            <div class="alert d-flex align-items-center gap-2 mb-4"
-                style="background:rgba(239,68,68,0.12);border:1px solid rgba(239,68,68,0.3);border-radius:10px;color:#fca5a5;">
-                <i class="bi bi-exclamation-triangle-fill"></i>
-                <span>Registration failed. This email may already be registered.</span>
-            </div>
-            {% endif %}
-
-            <!-- Success Alert -->
-            {% if error == "no" %}
-            <div class="alert d-flex align-items-center gap-2 mb-4"
-                style="background:rgba(16,185,129,0.12);border:1px solid rgba(16,185,129,0.3);border-radius:10px;color:#6ee7b7;">
-                <i class="bi bi-check-circle-fill"></i>
-                <span>Account created! Your account is pending admin approval. We'll notify you soon.</span>
-            </div>
-            {% endif %}
-
-            <form action="/recruitersignup/" method="post" enctype="multipart/form-data" id="recruiterSignupForm">
-                {% csrf_token %}
-
-                <!-- Personal Info -->
-                <div class="section-divider">Personal Information</div>
-                <div class="row g-3 mb-3">
-                    <div class="col-sm-6">
-                        <label for="fname" class="form-label">First Name</label>
-                        <div class="input-icon-wrap">
-                            <i class="bi bi-person"></i>
-                            <input type="text" class="form-control form-control-dark" id="fname" name="fname"
-                                placeholder="John" required />
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="row g-3 mb-3">
+                        <div class="col-sm-6">
+                            <label class="form-label small text-secondary">First Name</label>
+                            <input type="text" name="fname"
+                                class="form-control bg-transparent border-secondary text-white" required>
+                        </div>
+                        <div class="col-sm-6">
+                            <label class="form-label small text-secondary">Last Name</label>
+                            <input type="text" name="lname"
+                                class="form-control bg-transparent border-secondary text-white" required>
                         </div>
                     </div>
-                    <div class="col-sm-6">
-                        <label for="lname" class="form-label">Last Name</label>
-                        <div class="input-icon-wrap">
-                            <i class="bi bi-person"></i>
-                            <input type="text" class="form-control form-control-dark" id="lname" name="lname"
-                                placeholder="Doe" required />
+
+                    <div class="row g-3 mb-3">
+                        <div class="col-sm-6">
+                            <label class="form-label small text-secondary">Email Address</label>
+                            <input type="email" name="email"
+                                class="form-control bg-transparent border-secondary text-white" required>
+                        </div>
+                        <div class="col-sm-6">
+                            <label class="form-label small text-secondary">Password</label>
+                            <input type="password" name="password"
+                                class="form-control bg-transparent border-secondary text-white" required>
                         </div>
                     </div>
-                </div>
-                <div class="mb-3">
-                    <label for="gender" class="form-label">Gender</label>
-                    <div class="input-icon-wrap">
-                        <i class="bi bi-gender-ambiguous"></i>
-                        <select class="form-control form-control-dark form-select-dark" id="gender" name="gender"
-                            required>
-                            <option value="" disabled selected>Select gender</option>
-                            <option value="Male">Male</option>
-                            <option value="Female">Female</option>
-                            <option value="Other">Other</option>
-                            <option value="Prefer not to say">Prefer not to say</option>
-                        </select>
-                    </div>
-                </div>
 
-                <!-- Account Info -->
-                <div class="section-divider">Account Details</div>
-                <div class="mb-3">
-                    <label for="email" class="form-label">Email Address <span class="text-secondary">(used as
-                            username)</span></label>
-                    <div class="input-icon-wrap">
-                        <i class="bi bi-envelope"></i>
-                        <input type="email" class="form-control form-control-dark" id="email" name="email"
-                            placeholder="you@company.com" required />
+                    <div class="row g-3 mb-3">
+                        <div class="col-sm-6">
+                            <label class="form-label small text-secondary">Company Name</label>
+                            <input type="text" name="company"
+                                class="form-control bg-transparent border-secondary text-white" required>
+                        </div>
+                        <div class="col-sm-6">
+                            <label class="form-label small text-secondary">Contact Number</label>
+                            <input type="text" name="contact"
+                                class="form-control bg-transparent border-secondary text-white" required>
+                        </div>
                     </div>
-                </div>
-                <div class="mb-3">
-                    <label for="password" class="form-label">Password</label>
-                    <div class="input-icon-wrap">
-                        <i class="bi bi-lock"></i>
-                        <input type="password" class="form-control form-control-dark" id="password" name="password"
-                            placeholder="Min. 8 characters" minlength="8" required />
+
+                    <div class="mb-3">
+                        <label class="form-label small text-secondary">Gender</label>
+                        <div class="d-flex gap-4">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="gender" value="Male" id="rmale"
+                                    checked>
+                                <label class="form-check-label small" for="rmale">Male</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="gender" value="Female" id="rfemale">
+                                <label class="form-check-label small" for="rfemale">Female</label>
+                            </div>
+                        </div>
                     </div>
-                </div>
-                <div class="mb-3">
-                    <label for="contact" class="form-label">Contact Number</label>
-                    <div class="input-icon-wrap">
-                        <i class="bi bi-telephone"></i>
-                        <input type="tel" class="form-control form-control-dark" id="contact" name="contact"
-                            placeholder="+91 98765 43210" required />
+
+                    <div class="mb-4">
+                        <label class="form-label small text-secondary">Company Logo / Profile Photo</label>
+                        <input type="file" name="image" class="form-control bg-transparent border-secondary text-white">
                     </div>
+
+                    <button type="submit" class="btn btn-success w-100 py-2 mb-3 rounded-3 fw-bold">
+                        Register Recruiter
+                    </button>
+                </form>
+
+                <div class="text-center small">
+                    <span class="text-secondary">Already registered?</span>
+                    <a href="{% url 'recruiterlogin' %}" class="text-accent fw-600 text-decoration-none ms-1">Login
+                        here</a>
                 </div>
-
-                <!-- Company Info -->
-                <div class="section-divider">Company Information</div>
-                <div class="mb-3">
-                    <label for="company" class="form-label">Company Name</label>
-                    <div class="input-icon-wrap">
-                        <i class="bi bi-building"></i>
-                        <input type="text" class="form-control form-control-dark" id="company" name="company"
-                            placeholder="Acme Corp." required />
-                    </div>
-                </div>
-
-                <!-- Profile Photo -->
-                <div class="section-divider">Profile Photo <span style="font-weight:400;">(optional)</span></div>
-                <div class="mb-4 position-relative file-upload-box" id="fileUploadBox">
-                    <input type="file" name="image" id="imageUpload" accept="image/*"
-                        class="position-absolute w-100 h-100" style="top:0;left:0;opacity:0;cursor:pointer;"
-                        onchange="updateFileName(this)" />
-                    <i class="bi bi-cloud-arrow-up-fill d-block mb-2"></i>
-                    <p class="mb-0 text-secondary small" id="fileLabel">Click or drag to upload a photo</p>
-                </div>
-
-                <button type="submit" class="btn btn-auth w-100" id="recruiterSignupBtn">
-                    <i class="bi bi-person-check me-2"></i>Create Recruiter Account
-                </button>
-            </form>
-
-            <hr class="my-4" style="border-color:rgba(255,255,255,0.08);" />
-            <p class="text-center small mb-2" style="color:var(--muted);">
-                Already have an account?
-                <a href="/recruiterlogin/" style="color:#6ee7b7;">Login here</a>
-            </p>
-            <p class="text-center small mb-0" style="color:var(--muted);">
-                <a href="/" style="color:#6ee7b7;"><i class="bi bi-arrow-left me-1"></i>Back to Home</a>
-            </p>
+            </div>
         </div>
     </div>
-
-    <footer>© 2026 JobConnect. All rights reserved.</footer>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        function updateFileName(input) {
-            const label = document.getElementById('fileLabel');
-            if (input.files && input.files[0]) {
-                label.textContent = '✓ ' + input.files[0].name;
-                label.style.color = '#6ee7b7';
-            }
-        }
-    </script>
-</body>
-
-</html>
+</div>
+{% endblock %}

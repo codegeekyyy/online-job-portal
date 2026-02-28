@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+
+{% block title %}Post a New Job | JobConnect{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card bg-dark border-secondary p-4 shadow-lg rounded-4">
+                <div class="text-center mb-4">
+                    <h3 class="fw-bold">Create Job Posting</h3>
+                    <p class="text-secondary small">Reach out to top talent by providing clear job details.</p>
+                </div>
+
+                {% if error == "no" %}
+                <div class="alert alert-success alert-custom mb-4 py-2 small">
+                    <i class="bi bi-check-circle-fill me-2"></i> Job posted successfully! <a href="{% url 'job_list' %}"
+                        class="alert-link">View Job List</a>.
+                </div>
+                {% elif error == "yes" %}
+                <div class="alert alert-danger alert-custom mb-4 py-2 small">
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i> Something went wrong while posting the job.
+                </div>
+                {% endif %}
+
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label class="form-label small text-secondary">Job Title</label>
+                        <input type="text" name="jobtitle"
+                            class="form-control bg-transparent border-secondary text-white"
+                            placeholder="e.g. Senior Java Developer" required>
+                    </div>
+
+                    <div class="row g-3 mb-3">
+                        <div class="col-sm-6">
+                            <label class="form-label small text-secondary">Start Date</label>
+                            <input type="date" name="startdate"
+                                class="form-control bg-transparent border-secondary text-white" required>
+                        </div>
+                        <div class="col-sm-6">
+                            <label class="form-label small text-secondary">End Date</label>
+                            <input type="date" name="enddate"
+                                class="form-control bg-transparent border-secondary text-white" required>
+                        </div>
+                    </div>
+
+                    <div class="row g-3 mb-3">
+                        <div class="col-sm-6">
+                            <label class="form-label small text-secondary">Salary (LPA)</label>
+                            <input type="text" name="salary"
+                                class="form-control bg-transparent border-secondary text-white" placeholder="e.g. 12"
+                                required>
+                        </div>
+                        <div class="col-sm-6">
+                            <label class="form-label small text-secondary">Experience Required</label>
+                            <input type="text" name="experience"
+                                class="form-control bg-transparent border-secondary text-white"
+                                placeholder="e.g. 2-5 Years" required>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label small text-secondary">Required Skills</label>
+                        <input type="text" name="skills" class="form-control bg-transparent border-secondary text-white"
+                            placeholder="e.g. React, Node.js, AWS" required>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label small text-secondary">Job Description</label>
+                        <textarea name="description" class="form-control bg-transparent border-secondary text-white"
+                            rows="5" placeholder="Role responsibilities and requirements..." required></textarea>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary-gradient w-100 py-2 mb-3 rounded-3 fw-bold">
+                        Publish Job Posting
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

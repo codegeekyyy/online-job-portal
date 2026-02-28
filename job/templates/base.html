@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}JobConnect | Your Career Hub{% endblock %}</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css">
+
+    <style>
+        :root {
+            --bg-dark: #0f172a;
+            --card-dark: #1e293b;
+            --accent: #38bdf8;
+            --accent-glow: rgba(56, 189, 248, 0.4);
+            --luxury-grad: linear-gradient(135deg, #38bdf8 0%, #818cf8 100%);
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--bg-dark);
+            color: #f1f5f9;
+            overflow-x: hidden;
+        }
+
+        .navbar {
+            background: rgba(15, 23, 42, 0.8) !important;
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 1rem 0;
+        }
+
+        .navbar-brand {
+            font-weight: 800;
+            font-size: 1.5rem;
+            letter-spacing: -0.5px;
+        }
+
+        .text-accent {
+            color: var(--accent);
+        }
+
+        .btn-primary-gradient {
+            background: var(--luxury-grad);
+            border: none;
+            color: white;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(56, 189, 248, 0.2);
+        }
+
+        .btn-primary-gradient:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(56, 189, 248, 0.4);
+            color: white;
+        }
+
+        .btn-outline-custom {
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #94a3b8;
+            transition: all 0.3s ease;
+        }
+
+        .btn-outline-custom:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+            background: rgba(56, 189, 248, 0.05);
+        }
+
+        .nav-link {
+            color: #94a3b8 !important;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            color: var(--accent) !important;
+        }
+
+        .hover-lift {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .hover-lift:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .badge-approved {
+            background: rgba(34, 197, 94, 0.1);
+            color: #4ade80;
+        }
+
+        .badge-pending {
+            background: rgba(234, 179, 8, 0.1);
+            color: #facc15;
+        }
+
+        .badge-rejected {
+            background: rgba(239, 68, 68, 0.1);
+            color: #f87171;
+        }
+
+        footer {
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 4rem 0 2rem;
+            background: #0b1120;
+        }
+    </style>
+    {% block extra_css %}{% endblock %}
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+        <div class="container">
+            <a class="navbar-brand text-white" href="{% url 'home' %}">
+                <i class="bi bi-intersect text-accent me-2"></i>Job<span class="text-accent">Connect</span>
+            </a>
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto align-items-center">
+                    <li class="nav-item">
+                        <a class="nav-link px-3" href="{% url 'home' %}">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link px-3" href="{% url 'latest_jobs' %}">Explore Jobs</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link px-3" href="{% url 'contact' %}">Contact</a>
+                    </li>
+
+                    {% if request.user.is_authenticated %}
+                    {% if request.user.is_staff %}
+                    <!-- Admin Links -->
+                    <li class="nav-item dropdown ms-lg-3">
+                        <a class="btn btn-outline-custom rounded-pill px-4 dropdown-toggle" href="#" role="button"
+                            data-bs-toggle="dropdown">
+                            Admin Panel
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end border-secondary shadow-lg">
+                            <li><a class="dropdown-item" href="{% url 'adminhome' %}"><i
+                                        class="bi bi-speedometer2 me-2"></i>Dashboard</a></li>
+                            <li><a class="dropdown-item" href="{% url 'view_users' %}"><i
+                                        class="bi bi-people me-2"></i>Job Seekers</a></li>
+                            <li><a class="dropdown-item" href="{% url 'recruiter_all' %}"><i
+                                        class="bi bi-building me-2"></i>Recruiters</a></li>
+                            <li>
+                                <hr class="dropdown-divider border-secondary">
+                            </li>
+                            <li><a class="dropdown-item text-danger" href="{% url 'logout' %}"><i
+                                        class="bi bi-box-arrow-right me-2"></i>Logout</a></li>
+                        </ul>
+                    </li>
+                    {% elif request.user.recruiter_set.exists %}
+                    <!-- Recruiter Links -->
+                    <li class="nav-item dropdown ms-lg-3">
+                        <a class="btn btn-outline-custom rounded-pill px-4 dropdown-toggle" href="#" role="button"
+                            data-bs-toggle="dropdown">
+                            Recruiter Hub
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end border-secondary shadow-lg">
+                            <li><a class="dropdown-item" href="{% url 'recruiterhome' %}"><i
+                                        class="bi bi-person-badge me-2"></i>My Profile</a></li>
+                            <li><a class="dropdown-item" href="{% url 'add_job' %}"><i
+                                        class="bi bi-plus-circle me-2"></i>Post a Job</a></li>
+                            <li><a class="dropdown-item" href="{% url 'job_list' %}"><i
+                                        class="bi bi-briefcase me-2"></i>My Jobs</a></li>
+                            <li>
+                                <hr class="dropdown-divider border-secondary">
+                            </li>
+                            <li><a class="dropdown-item text-danger" href="{% url 'logout' %}"><i
+                                        class="bi bi-box-arrow-right me-2"></i>Logout</a></li>
+                        </ul>
+                    </li>
+                    {% else %}
+                    <!-- Student/User Links -->
+                    <li class="nav-item dropdown ms-lg-3">
+                        <a class="btn btn-outline-custom rounded-pill px-4 dropdown-toggle" href="#" role="button"
+                            data-bs-toggle="dropdown">
+                            Hi, {{ request.user.first_name }}
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end border-secondary shadow-lg">
+                            <li><a class="dropdown-item" href="{% url 'userhome' %}"><i
+                                        class="bi bi-person me-2"></i>Profile</a></li>
+                            <li>
+                                <hr class="dropdown-divider border-secondary">
+                            </li>
+                            <li><a class="dropdown-item text-danger" href="{% url 'logout' %}"><i
+                                        class="bi bi-box-arrow-right me-2"></i>Logout</a></li>
+                        </ul>
+                    </li>
+                    {% endif %}
+                    {% else %}
+                    <!-- Guest Links -->
+                    <li class="nav-item ms-lg-3">
+                        <a class="nav-link px-3" href="{% url 'userlogin' %}">Login</a>
+                    </li>
+                    <li class="nav-item ms-lg-2">
+                        <a class="btn btn-primary-gradient rounded-pill px-4" href="{% url 'usersignup' %}">Sign Up</a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer mt-auto">
+        <div class="container">
+            <div class="row g-4 mb-5">
+                <div class="col-lg-4">
+                    <h5 class="fw-bold mb-3"><i class="bi bi-intersect text-accent me-2"></i>JobConnect</h5>
+                    <p class="text-secondary small">Connecting the world's best talent with the most innovative
+                        companies on the planet. Built with passion for your success.</p>
+                </div>
+                <div class="col-6 col-lg-2 offset-lg-2">
+                    <h6 class="fw-bold mb-3">Platform</h6>
+                    <ul class="list-unstyled small">
+                        <li><a href="{% url 'latest_jobs' %}"
+                                class="text-secondary text-decoration-none hover-accent">Browse Jobs</a></li>
+                        <li><a href="#" class="text-secondary text-decoration-none">How it works</a></li>
+                    </ul>
+                </div>
+                <div class="col-6 col-lg-2">
+                    <h6 class="fw-bold mb-3">Support</h6>
+                    <ul class="list-unstyled small">
+                        <li><a href="{% url 'contact' %}" class="text-secondary text-decoration-none">Contact Us</a>
+                        </li>
+                        <li><a href="#" class="text-secondary text-decoration-none">Help Center</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-2">
+                    <h6 class="fw-bold mb-3">Follow Us</h6>
+                    <div class="d-flex gap-3">
+                        <a href="https://www.linkedin.com/in/harshdeep-singh-580124294/" class="text-secondary fs-5"><i class="bi bi-linkedin"></i></a>
+                        <a href="https://github.com/codegeekyyy" class="text-secondary fs-5"><i class="bi bi-github"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="text-center pt-4 border-top border-white border-opacity-5">
+                <p class="text-secondary small mb-0">&copy; 2026 JobConnect Portal. All rights reserved.  harshdeep singh.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap 5 JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+
+</html>
