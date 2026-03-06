@@ -1,4 +1,6 @@
 from django.shortcuts import render, redirect
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
 from .models import *
 from django.contrib.auth.models import User
 from job.models import Recruiter
@@ -8,7 +10,8 @@ from datetime import date
 
 
 def home(request):
-    return render(request, 'home.html')
+    jobs = Job.objects.all().order_by('-creationdate')[:3]
+    return render(request, 'home.html', {'jobs': jobs})
 
 
 def admin_login(request):
@@ -469,6 +472,7 @@ def applyforjob(request,pk):
             error = "done"
     context = {
         'error':error,
+        'job':job,
     }
     return render(request, 'applyforjob.html',context)
 
@@ -485,5 +489,45 @@ def applied_candidatelist(request):
 def contact(request):
     return render(request, 'contact.html')
 
-    
-    
+
+@csrf_exempt
+def job_match(request):
+    """POST endpoint: accepts resume (file) + job_id, returns match JSON."""
+    if request.method != 'POST':
+        return JsonResponse({'error': 'POST required'}, status=405)
+
+    if not request.user.is_authenticated:
+        return JsonResponse({'error': 'Login required'}, status=401)
+
+    resume_file = request.FILES.get('resume')
+    job_id = request.POST.get('job_id')
+
+    if not resume_file:
+        return JsonResponse({'error': 'No resume file uploaded'}, status=400)
+    if not job_id:
+        return JsonResponse({'error': 'job_id is required'}, status=400)
+
+    # Validate file type
+    if not resume_file.name.lower().endswith(('.pdf', '.PDF')):
+        return JsonResponse({'error': 'Only PDF files are supported'}, status=400)
+
+    try:
+        job = Job.objects.get(id=job_id)
+    except Job.DoesNotExist:
+        return JsonResponse({'error': 'Job not found'}, status=404)
+
+    # Build job description text from job fields
+    job_description = (
+        f"Job Title: {job.title}\n"
+        f"Company: {job.recruiter.company}\n"
+        f"Required Skills: {job.skills}\n"
+        f"Experience Required: {job.experience} years\n"
+        f"Description: {job.description}"
+    )
+
+    # Run RAG pipeline
+    from job.rag_service import run_job_match
+    resume_bytes = resume_file.read()
+    result = run_job_match(resume_bytes, job_description)
+
+    return JsonResponse(result)

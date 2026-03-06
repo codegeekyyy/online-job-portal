@@ -36,6 +36,7 @@ urlpatterns = [
     path('applyforjob/<int:pk>/', views.applyforjob, name="applyforjob"),
     path('applied_candidatelist/', views.applied_candidatelist, name="applied_candidatelist"),
     path('contact/', views.contact, name="contact"),
+    path('job-match/', views.job_match, name="job_match"),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

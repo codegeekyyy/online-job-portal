@@ -5,7 +5,7 @@
 {% block content %}
 <div class="container py-5">
     <div class="row">
-        
+
         <!-- LEFT SECTION -->
         <div class="col-lg-8">
             <div class="card bg-dark border-secondary p-4 rounded-4 shadow-sm mb-4">
@@ -22,7 +22,8 @@
                         </h2>
 
                         <p class="text-secondary mb-0">
-                            {{ job.recruiter.company }} • {{ job.recruiter.user.first_name }} {{ job.recruiter.user.last_name }}
+                            {{ job.recruiter.company }} • {{ job.recruiter.user.first_name }} {{
+                            job.recruiter.user.last_name }}
                         </p>
                     </div>
                 </div>
@@ -70,13 +71,13 @@
                     <div class="d-flex flex-wrap gap-2">
 
                         {% if job.skills %}
-                            {% for skill in job.skills.split %}
-                                <span class="badge bg-primary bg-opacity-10 text-primary px-3 py-2 rounded-pill">
-                                    {{ skill }}
-                                </span>
-                            {% endfor %}
+                        {% for skill in job.skills.split %}
+                        <span class="badge bg-primary bg-opacity-10 text-primary px-3 py-2 rounded-pill">
+                            {{ skill }}
+                        </span>
+                        {% endfor %}
                         {% else %}
-                            <span class="text-secondary">No skills mentioned</span>
+                        <span class="text-secondary">No skills mentioned</span>
                         {% endif %}
 
                     </div>
@@ -88,7 +89,7 @@
         <!-- RIGHT SECTION -->
         <div class="col-lg-4">
             <div class="card bg-dark border-secondary p-4 rounded-4 shadow-sm sticky-top" style="top: 100px;">
-                
+
                 <h5 class="fw-bold text-white mb-4">Application Timeline</h5>
 
                 <div class="mb-4">
@@ -110,15 +111,18 @@
                 <hr class="border-secondary mb-4">
 
                 {% if request.user.is_authenticated %}
-                    <a href="{% url 'applyforjob' job.id %}" 
-                       class="btn btn-primary w-100 py-3 rounded-3 fw-bold">
-                        Apply for this Job
-                    </a>
+                <a href="{% url 'applyforjob' job.id %}" class="btn btn-primary w-100 py-3 rounded-3 fw-bold mb-3">
+                    Apply for this Job
+                </a>
+                <!-- Check Job Match Button -->
+                <button id="checkMatchBtn" onclick="openMatchModal()" class="btn w-100 py-3 rounded-3 fw-bold"
+                    style="background: linear-gradient(135deg,#7c3aed,#2563eb); color:#fff; border:none;">
+                    <i class="bi bi-lightning-charge-fill me-2"></i>Check Job Match
+                </button>
                 {% else %}
-                    <a href="{% url 'userlogin' %}" 
-                       class="btn btn-outline-light w-100 py-3 rounded-3 fw-bold">
-                        Login to Apply
-                    </a>
+                <a href="{% url 'userlogin' %}" class="btn btn-outline-light w-100 py-3 rounded-3 fw-bold">
+                    Login to Apply
+                </a>
                 {% endif %}
 
             </div>
@@ -126,4 +130,233 @@
 
     </div>
 </div>
+
+<!-- ═══════════════════════════════════════════════════════
+     JOB MATCH MODAL
+═══════════════════════════════════════════════════════ -->
+<div class="modal fade" id="jobMatchModal" tabindex="-1" aria-labelledby="jobMatchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content bg-dark border-secondary rounded-4 shadow-lg">
+
+            <!-- Header -->
+            <div class="modal-header border-secondary px-4 pt-4 pb-3">
+                <div>
+                    <h5 class="modal-title fw-bold text-white mb-0" id="jobMatchModalLabel">
+                        <i class="bi bi-lightning-charge-fill text-accent me-2"></i>AI Job Match Analyzer
+                    </h5>
+                    <small class="text-secondary">Powered by Groq · llama-3.1-8b-instant</small>
+                </div>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                    aria-label="Close"></button>
+            </div>
+
+            <!-- Upload Form -->
+            <div class="modal-body px-4 pb-2" id="matchUploadSection">
+                <p class="text-secondary mb-3">Upload your resume PDF and let AI compare it against this job's
+                    requirements.</p>
+                <div class="mb-3">
+                    <label class="form-label small text-secondary fw-bold">Resume (PDF only)</label>
+                    <input type="file" id="resumeInput" accept=".pdf"
+                        class="form-control bg-transparent border-secondary text-white py-2" />
+                </div>
+                <div id="matchError" class="alert alert-danger small py-2 d-none"></div>
+                <button type="button" onclick="runJobMatch()" id="analyzeBtn"
+                    class="btn w-100 py-2 fw-bold rounded-3 mb-3"
+                    style="background: linear-gradient(135deg,#7c3aed,#2563eb); color:#fff; border:none;">
+                    <span id="analyzeBtnText"><i class="bi bi-stars me-2"></i>Analyze My Resume</span>
+                    <span id="analyzeBtnLoading" class="d-none">
+                        <span class="spinner-border spinner-border-sm me-2" role="status"></span>Analyzing…
+                    </span>
+                </button>
+            </div>
+
+            <!-- Results Section (hidden until response) -->
+            <div class="modal-body px-4 pt-0 d-none" id="matchResultSection">
+
+                <!-- Score Ring -->
+                <div class="text-center mb-4">
+                    <div class="position-relative d-inline-block">
+                        <svg width="140" height="140" viewBox="0 0 140 140">
+                            <circle cx="70" cy="70" r="58" fill="none" stroke="#1e293b" stroke-width="14" />
+                            <circle id="scoreRing" cx="70" cy="70" r="58" fill="none" stroke-width="14"
+                                stroke-linecap="round" stroke-dasharray="364.4" stroke-dashoffset="364.4"
+                                transform="rotate(-90 70 70)"
+                                style="transition: stroke-dashoffset 1.2s ease; stroke: url(#scoreGrad)" />
+                            <defs>
+                                <linearGradient id="scoreGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                                    <stop offset="0%" style="stop-color:#7c3aed" />
+                                    <stop offset="100%" style="stop-color:#2563eb" />
+                                </linearGradient>
+                            </defs>
+                        </svg>
+                        <div class="position-absolute top-50 start-50 translate-middle text-center">
+                            <div id="scoreValue" class="fw-bold text-white" style="font-size:2rem; line-height:1;">0%
+                            </div>
+                            <div class="text-secondary" style="font-size:0.7rem;">Match</div>
+                        </div>
+                    </div>
+                    <!-- Recommendation Badge -->
+                    <div class="mt-2">
+                        <span id="recommendationBadge" class="badge rounded-pill px-4 py-2 fs-6"></span>
+                    </div>
+                </div>
+
+                <div class="row g-3 mb-3">
+                    <!-- Matching Skills -->
+                    <div class="col-md-6">
+                        <div class="p-3 rounded-3" style="background:#0f2c1b;">
+                            <h6 class="fw-bold mb-2" style="color:#4ade80;"><i
+                                    class="bi bi-check-circle-fill me-1"></i>Matching Skills</h6>
+                            <div id="matchingSkillsList" class="d-flex flex-wrap gap-2"></div>
+                        </div>
+                    </div>
+                    <!-- Missing Skills -->
+                    <div class="col-md-6">
+                        <div class="p-3 rounded-3" style="background:#2c0f0f;">
+                            <h6 class="fw-bold mb-2" style="color:#f87171;"><i
+                                    class="bi bi-x-circle-fill me-1"></i>Missing Skills</h6>
+                            <div id="missingSkillsList" class="d-flex flex-wrap gap-2"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Strengths -->
+                <div class="p-3 rounded-3 mb-3" style="background:#1e293b;">
+                    <h6 class="fw-bold text-white mb-1"><i class="bi bi-trophy-fill text-warning me-1"></i>Strengths
+                    </h6>
+                    <p id="strengthsText" class="text-secondary small mb-0"></p>
+                </div>
+
+                <!-- Explanation -->
+                <div class="p-3 rounded-3 mb-3" style="background:#0f172a; border:1px solid #334155;">
+                    <h6 class="fw-bold text-white mb-1"><i class="bi bi-chat-left-text-fill text-info me-1"></i>AI
+                        Explanation</h6>
+                    <p id="explanationText" class="text-secondary small mb-0"></p>
+                </div>
+
+                <!-- Analyze Another -->
+                <button onclick="resetMatchModal()" class="btn btn-outline-secondary w-100 rounded-3 mb-3 small">
+                    <i class="bi bi-arrow-counterclockwise me-1"></i>Analyze Another Resume
+                </button>
+
+            </div><!-- /matchResultSection -->
+
+        </div>
+    </div>
+</div>
+
+<!-- ═══════════════════════════════ JS ═══════════════════════════════ -->
+<script>
+    function openMatchModal() {
+        resetMatchModal();
+        var modal = new bootstrap.Modal(document.getElementById('jobMatchModal'));
+        modal.show();
+    }
+
+    function resetMatchModal() {
+        document.getElementById('matchUploadSection').classList.remove('d-none');
+        document.getElementById('matchResultSection').classList.add('d-none');
+        document.getElementById('matchError').classList.add('d-none');
+        document.getElementById('resumeInput').value = '';
+        setAnalyzeLoading(false);
+    }
+
+    function setAnalyzeLoading(on) {
+        document.getElementById('analyzeBtnText').classList.toggle('d-none', on);
+        document.getElementById('analyzeBtnLoading').classList.toggle('d-none', !on);
+        document.getElementById('analyzeBtn').disabled = on;
+    }
+
+    async function runJobMatch() {
+        const file = document.getElementById('resumeInput').files[0];
+        const errBox = document.getElementById('matchError');
+        errBox.classList.add('d-none');
+
+        if (!file) {
+            errBox.textContent = 'Please select a PDF resume first.';
+            errBox.classList.remove('d-none');
+            return;
+        }
+        if (!file.name.toLowerCase().endsWith('.pdf')) {
+            errBox.textContent = 'Only PDF files are supported.';
+            errBox.classList.remove('d-none');
+            return;
+        }
+
+        setAnalyzeLoading(true);
+
+        const form = new FormData();
+        form.append('resume', file);
+        form.append('job_id', '{{ job.id }}');
+
+        try {
+            const resp = await fetch('/job-match/', { method: 'POST', body: form });
+            const data = await resp.json();
+
+            if (data.error) {
+                errBox.textContent = data.error;
+                errBox.classList.remove('d-none');
+                setAnalyzeLoading(false);
+                return;
+            }
+
+            renderMatchResult(data);
+        } catch (e) {
+            errBox.textContent = 'Network error. Please try again.';
+            errBox.classList.remove('d-none');
+            setAnalyzeLoading(false);
+        }
+    }
+
+    function renderMatchResult(data) {
+        // Hide upload, show result
+        document.getElementById('matchUploadSection').classList.add('d-none');
+        document.getElementById('matchResultSection').classList.remove('d-none');
+
+        // Animate score ring
+        const score = Math.min(100, Math.max(0, data.match_score || 0));
+        const circumference = 364.4;
+        const offset = circumference - (score / 100) * circumference;
+        setTimeout(() => {
+            document.getElementById('scoreRing').style.strokeDashoffset = offset;
+        }, 100);
+        // Animate number
+        let current = 0;
+        const step = Math.ceil(score / 60);
+        const timer = setInterval(() => {
+            current = Math.min(current + step, score);
+            document.getElementById('scoreValue').textContent = current + '%';
+            if (current >= score) clearInterval(timer);
+        }, 20);
+
+        // Recommendation badge
+        const rec = data.recommendation || 'Unknown';
+        const badge = document.getElementById('recommendationBadge');
+        badge.textContent = rec;
+        badge.className = 'badge rounded-pill px-4 py-2 fs-6 ';
+        if (rec.includes('Good')) badge.style.cssText = 'background:#14532d; color:#4ade80;';
+        else if (rec.includes('Moderate')) badge.style.cssText = 'background:#7c2d12; color:#fb923c;';
+        else badge.style.cssText = 'background:#450a0a; color:#f87171;';
+
+        // Skills
+        const matchBox = document.getElementById('matchingSkillsList');
+        const missBox = document.getElementById('missingSkillsList');
+        matchBox.innerHTML = '';
+        missBox.innerHTML = '';
+
+        (data.matching_skills || []).forEach(s => {
+            matchBox.innerHTML += `<span class="badge rounded-pill px-3 py-1" style="background:#14532d;color:#4ade80;">✓ ${s}</span>`;
+        });
+        if (!matchBox.innerHTML) matchBox.innerHTML = '<span class="text-secondary small">None identified</span>';
+
+        (data.missing_skills || []).forEach(s => {
+            missBox.innerHTML += `<span class="badge rounded-pill px-3 py-1" style="background:#450a0a;color:#f87171;">✗ ${s}</span>`;
+        });
+        if (!missBox.innerHTML) missBox.innerHTML = '<span class="text-secondary small">None – great fit!</span>';
+
+        document.getElementById('strengthsText').textContent = data.strengths || '—';
+        document.getElementById('explanationText').textContent = data.explanation || '—';
+    }
+</script>
+
 {% endblock %}

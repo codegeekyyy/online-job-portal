@@ -24,7 +24,7 @@ class StudentUser(models.Model):
         return self.user.username
 
 class Job(models.Model):
-    title = models.ForeignKey(Recruiter, on_delete=models.CASCADE)
+    recruiter = models.ForeignKey(Recruiter, on_delete=models.CASCADE)
     start_date = models.DateField(null=True)
     end_date = models.DateField()
     title = models.CharField(max_length=100, null=True)
@@ -43,4 +43,4 @@ class Apply(models.Model):
     resume=models.FileField(null=True)
     applydate=models.DateField()
     def _str_(self):
-        return self.id
+        return self.student.user.username
