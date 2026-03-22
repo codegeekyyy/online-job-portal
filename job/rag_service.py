@@ -4,7 +4,7 @@ import json
 import re
 import pdfplumber
 import numpy as np
-from sentence_transformers import SentenceTransformer
+from langchain_huggingface import HuggingFaceEndpointEmbeddings
 import faiss
 
 from langchain_groq import ChatGroq
@@ -13,8 +13,9 @@ from langchain_core.messages import HumanMessage
 
 
 GROQ_API_KEY = os.environ.get("GROQ_API_KEY", "")
+HUGGINGFACE_API_KEY = os.environ.get("HUGGINGFACE_API_KEY", "")
 MODEL_NAME = "llama-3.1-8b-instant"
-EMBEDDING_MODEL = "all-MiniLM-L6-v2"
+EMBEDDING_MODEL = "sentence-transformers/all-MiniLM-L6-v2"
 CHUNK_SIZE = 400          # characters per chunk
 CHUNK_OVERLAP = 80        # overlap between chunks
 TOP_K_CHUNKS = 6          # number of resume chunks to retrieve
@@ -26,7 +27,10 @@ _embedding_model = None  # lazy-load so server startup stays fast
 def _get_embedding_model():
     global _embedding_model
     if _embedding_model is None:
-        _embedding_model = SentenceTransformer(EMBEDDING_MODEL)
+        _embedding_model = HuggingFaceEndpointEmbeddings(
+            huggingfacehub_api_token=HUGGINGFACE_API_KEY, 
+            model=EMBEDDING_MODEL
+        )
     return _embedding_model
 
 
@@ -56,16 +60,19 @@ def chunk_text(text: str, chunk_size: int = CHUNK_SIZE, overlap: int = CHUNK_OVE
 
 def build_faiss_index(chunks, model):
     """Embed chunks and build a FAISS flat-L2 index."""
-    embeddings = model.encode(chunks, convert_to_numpy=True, show_progress_bar=False)
+    # HuggingFaceInferenceAPIEmbeddings returns a list of lists
+    emb_list = model.embed_documents(chunks)
+    embeddings = np.array(emb_list).astype(np.float32)
     dim = embeddings.shape[1]
     index = faiss.IndexFlatL2(dim)
-    index.add(embeddings.astype(np.float32))
+    index.add(embeddings)
     return index, embeddings
 
 
 def retrieve_top_chunks(query: str, chunks, index, model, top_k: int = TOP_K_CHUNKS):
     """Retrieve the most semantically similar resume chunks for a given query."""
-    query_embedding = model.encode([query], convert_to_numpy=True).astype(np.float32)
+    query_emb = model.embed_query(query)
+    query_embedding = np.array([query_emb]).astype(np.float32)
     distances, indices = index.search(query_embedding, min(top_k, len(chunks)))
     return [chunks[i] for i in indices[0] if i < len(chunks)]
 
