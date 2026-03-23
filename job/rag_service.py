@@ -135,16 +135,15 @@ def run_job_match(resume_bytes: bytes, job_description: str) -> dict:
     resume_context = "\n\n---\n\n".join(top_chunks)
 
     # Step 5 – LLM call
-    prompt = MATCH_PROMPT.format(
-        job_description=job_description,
-        resume_chunks=resume_context,
-    )
-
     try:
         llm = ChatGroq(
             api_key=GROQ_API_KEY,
             model_name=MODEL_NAME,
             temperature=0.2,
+        )
+        prompt = MATCH_PROMPT.format(
+            job_description=job_description,
+            resume_chunks=resume_context,
         )
         response = llm.invoke([HumanMessage(content=prompt)])
         raw = response.content.strip()
